@@ -1,0 +1,4 @@
+Executa Generator, 
+Corrige o erro que vai falar "return null;" pra "return;"
+Executa Lua
+Prints no console.
