@@ -80,8 +80,8 @@ number = {float} | {inteiro} | {expoente}
 "]" {return createToken("fecha colchetes", yytext());}
 "..." {return createToken("vararg expression", yytext()); }
 ".." {return createToken("concaternar string", yytext());}
-"." {return createToken("virgula", yytext());}
-"," {return createToken("ponto", yytext());}
+"." {return createToken("ponto", yytext());}
+"," {return createToken("virgula", yytext());}
 
 
 
