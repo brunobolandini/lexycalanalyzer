@@ -19,8 +19,13 @@ private LuaToken createToken(String name, String value) {
 %line
 %column
 
-comentario_em_bloco = \[((=*)\[([^])*?)\]\2\]
-cometario_curto =  --.*
+comeca_comentario = "--[["
+conteudo_comentario = ([^-]|[^\[{2}])*
+termina_comentario = "--]]"
+
+
+comentario_em_bloco = {comeca_comentario}{conteudo_comentario}{termina_comentario}
+comentario_curto = -{2}[^\[][^\]][^\n]*
 expoente = [-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 float = [0-9]+\.[0-9]*
 inteiro = 0|[1-9][0-9]*
@@ -28,12 +33,14 @@ brancos = [\n| |\t|\r]
 name = [_|a-z|A-Z][a-z|A-Z|0-9|_]*
 stringLua = \"(([^\\]+)|(\\.))*\"
 number = {float} | {inteiro} | {expoente}
+comentario = {comentario_em_bloco} | {comentario_curto}
 
 
 //comentario number string id
 %%
-{cometario_curto} {return createToken("comentario_curto",yytext());}
+{comentario_curto} {return createToken("comentario_curto",yytext());}
 {comentario_em_bloco} {return createToken("comentario_em_bloco", yytext());}
+
 "and" {return createToken("operador e", yytext());}
 "break" {return createToken("quebra laco", yytext());}
 "do" {return createToken("laco faca", yytext());}
