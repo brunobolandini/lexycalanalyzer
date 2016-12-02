@@ -19,6 +19,8 @@ private LuaToken createToken(String name, String value) {
 %line
 %column
 
+comentario_em_bloco = \[((=*)\[([^])*?)\]\2\]
+cometario_curto =  --.*
 expoente = [-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 float = [0-9]+\.[0-9]*
 inteiro = 0|[1-9][0-9]*
@@ -30,10 +32,8 @@ number = {float} | {inteiro} | {expoente}
 
 //comentario number string id
 %%
-//     and       break     do        else      elseif
-//     end       false     for       function  if
-//     in        local     nil       not       or
-//     repeat    return    then      true      until     while
+{cometario_curto} {return createToken("comentario_curto",yytext());}
+{comentario_em_bloco} {return createToken("comentario_em_bloco", yytext());}
 "and" {return createToken("operador e", yytext());}
 "break" {return createToken("quebra laco", yytext());}
 "do" {return createToken("laco faca", yytext());}
@@ -54,7 +54,6 @@ number = {float} | {inteiro} | {expoente}
 "true" {return createToken("valor verdadeiro", yytext());}
 "until"  {return createToken("ate limite laco", yytext());}
 "while"  {return createToken("laco enquanto", yytext());}
-
 
 ">=" {return createToken("maior igual que", yytext());}
 "<=" {return createToken("menor igual que", yytext());}
@@ -82,8 +81,6 @@ number = {float} | {inteiro} | {expoente}
 ".." {return createToken("concaternar string", yytext());}
 "." {return createToken("ponto", yytext());}
 "," {return createToken("virgula", yytext());}
-
-
 
 {number} {return createToken("number", yytext());}
 {brancos} { yytext(); }
