@@ -34,60 +34,60 @@ number = {float} | {inteiro} | {expoente}
 //     end       false     for       function  if
 //     in        local     nil       not       or
 //     repeat    return    then      true      until     while
-"and" {return createToken("operador e", yytext());}
-"break" {return createToken("quebra laco", yytext());}
-"do" {return createToken("laco faca", yytext());}
-"elseif" {return createToken("senao se",yytext());}
-"else" {return createToken("senao", yytext());}
-"end" {return createToken("fim do laco", yytext());}
-"false" {return createToken("valor falso", yytext());}
-"for" {return createToken("laco para", yytext());}
-"function" {return createToken("funcao", yytext());}
-"if" {return createToken("se condicional", yytext());}
-"in" {return createToken("dentro", yytext());}
-"local" {return createToken("definicao local", yytext());}
-"nil"  {return createToken("nulo", yytext());}
-"not"  {return createToken("negacao", yytext());}
-"or"  {return createToken("ou", yytext());}
-"repeat"  {return createToken("repeticao", yytext());}
-"then"  {return createToken("entao", yytext());}
-"true" {return createToken("valor verdadeiro", yytext());}
-"until"  {return createToken("ate limite laco", yytext());}
-"while"  {return createToken("laco enquanto", yytext());}
+"and" {return new Symbol(Sym.OPERADOR_E);}
+"break" {return new Symbol(Sym.QUEBRA_LACO);}
+"do" {return new Symbol(Sym.LACO_FAZA);}
+"elseif" {return new Symbol( Sym.SENAO_SE);}
+"else" {return new Symbol( Sym.SENAO;)}
+"end" {return new Symbol( Sym.FIM_DO_LACO);}
+"false" {return new Symbol( Sym.VALOR_FALSO);}
+"for" {return new Symbol( Sym.LACO_PARA);}
+"function" {return new Symbol( Sym.FUNCAO);}
+"if" {return new Symbol( Sym.SE_CONDICIONAL);}
+"in" {return new Symbol( Sym.DENTRO);}
+"local" {return new Symbol( Sym.DEFINICAO_LOCAL);}
+"nil"  {return new Symbol( Sym.NULO);}
+"not"  {return new Symbol( Sym.NEGACAO);}
+"or"  {return new Symbol( Sym.OU);}
+"repeat"  {return new Symbol( Sym.REPETICAO);}
+"then"  {return new Symbol( Sym.ENTAO);}
+"true" {return new Symbol( Sym.VALOR_VERDADEIRO);}
+"until"  {return new Symbol( Sym.ATE_LIMITE_LACO);}
+"while"  {return new Symbol( Sym.LACO_ENQUANTO);}
 
 
-">=" {return createToken("maior igual que", yytext());}
-"<=" {return createToken("menor igual que", yytext());}
-">" {return createToken("maior que", yytext());}
-"<" {return createToken("menor que", yytext());}
-"==" {return createToken("igual comparativo", yytext()); }
-"=" {return createToken("atribuicao", yytext());}
-"~=" {return createToken("diferente", yytext()); }
-"+"  {return createToken("soma", yytext()); }
-"-" {return createToken("subtracao", yytext()); }
-"*" {return createToken("multiplicacao", yytext()); }
-"/" {return createToken("divisao", yytext()); }
-"^" {return createToken("exponenciacao", yytext()); }
-"%" {return createToken("resto(mod)", yytext()); }
-"#" {return createToken("tamanho", yytext()); }
-";" {return createToken("ponto e virgula", yytext()); }
-":" {return createToken("dois pontos", yytext()); }
-"(" {return createToken("abre parentesis", yytext());}
-")" {return createToken("fecha parentesis", yytext());}
-"{" {return createToken("abre chaves", yytext());}
-"}"  {return createToken("fecha chaves", yytext());}
-"["  {return createToken("abre colchetes", yytext());}
-"]" {return createToken("fecha colchetes", yytext());}
-"..." {return createToken("vararg expression", yytext()); }
-".." {return createToken("concaternar string", yytext());}
-"." {return createToken("ponto", yytext());}
-"," {return createToken("virgula", yytext());}
+">=" {return new Symbol( Sym.MAIOR_IGUAL_QUE);}
+"<=" {return new Symbol( Sym.MENOR_IGUAL_QUE);}
+">" {return new Symbol( Sym.MAIOR_QUE);}
+"<" {return new Symbol( Sym.MENOR_QUE);}
+"==" {return new Symbol( Sym.IGUAL_COMPARATIVO); }
+"=" {return new Symbol( Sym.ATRIBUICAO);}
+"~=" {return new Symbol( Sym.DIFERENTE); }
+"+"  {return new Symbol( Sym.SOMA); }
+"-" {return new Symbol( Sym.SUBTRACAO); }
+"*" {return new Symbol( Sym.MULTIPLICACAO); }
+"/" {return new Symbol( Sym.DIVISAO); }
+"^" {return new Symbol( Sym.EXPONENCIACAO); }
+"%" {return new Symbol( Sym.RESTO); }
+"#" {return new Symbol( Sym.TAMANHO); }
+";" {return new Symbol( Sym.PONTO_E_VIRGULA); }
+":" {return new Symbol( Sym.DOIS_PONTOS); }
+"(" {return new Symbol( Sym.ABRE_PARENTESIS);}
+")" {return new Symbol( Sym.FECHA_PARENTESIS);}
+"{" {return new Symbol( Sym.ABRE_CHAVES);}
+"}"  {return new Symbol( Sym.FECHA_CHAVES);}
+"["  {return new Symbol( Sym.ABRE_COLCHETES);}
+"]" {return new Symbol( Sym.FECHA_COLCHETES);}
+"..." {return new Symbol( Sym.EXPRESSAO_VARARG); }
+".." {return new Symbol( Sym.CONCATERNAR_STRING);}
+"." {return new Symbol( Sym.PONTO);}
+"," {return new Symbol( Sym.VIRGULA);}
 
 
 
-{number} {return createToken("number", yytext());}
-{brancos} { yytext(); }
-{stringLua} {return createToken("string lua", yytext()); }
-{name} {return createToken("name", yytext()); }
+{number} {return new Symbol( Sym.NUMBER);}
+{brancos} { return; }
+{stringLua} {return new Symbol( Sym.STRING_LUA); }
+{name} {return new Symbol( Sym.NAME); }
 
 . { throw new RuntimeException("Caractere inválido " + yytext() + " na linha " + yyline + ", coluna " +yycolumn); }
