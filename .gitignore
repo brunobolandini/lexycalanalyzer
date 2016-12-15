@@ -7,3 +7,4 @@ nbproject/project.properties
 nbproject/project.xml
 src/lua/LexicalAnalyzer.java~
 src/main/LexicalAnalyzer.java~
+bin/*

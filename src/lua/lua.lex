@@ -13,6 +13,7 @@ private LuaToken createToken(String name, String value) {
 
 %}
 
+%cup
 %public
 %class LexicalAnalyzer
 %type LuaToken
