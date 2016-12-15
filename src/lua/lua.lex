@@ -19,6 +19,13 @@ private LuaToken createToken(String name, String value) {
 %line
 %column
 
+comeca_comentario = "--[["
+conteudo_comentario = ([^-]|[^\[{2}])*
+termina_comentario = "--]]"
+
+
+comentario_em_bloco = {comeca_comentario}{conteudo_comentario}{termina_comentario}
+comentario_curto = -{2}[^\[][^\]][^\n]*
 expoente = [-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 float = [0-9]+\.[0-9]*
 inteiro = 0|[1-9][0-9]*
@@ -26,14 +33,21 @@ brancos = [\n| |\t|\r]
 name = [_|a-z|A-Z][a-z|A-Z|0-9|_]*
 stringLua = \"(([^\\]+)|(\\.))*\"
 number = {float} | {inteiro} | {expoente}
+comentario = {comentario_em_bloco} | {comentario_curto}
 
 
 //comentario number string id
 %%
+
 //     and       break     do        else      elseif
 //     end       false     for       function  if
 //     in        local     nil       not       or
 //     repeat    return    then      true      until     while
+
+{comentario_curto} {return new Symbol(Sym.COMENTARIO_CURTO);}
+{comentario_em_bloco} {return new Symbol(Sym.COMENTARIO_EM_BLOCO);}
+
+
 "and" {return new Symbol(Sym.OPERADOR_E);}
 "break" {return new Symbol(Sym.QUEBRA_LACO);}
 "do" {return new Symbol(Sym.LACO_FAZA);}
