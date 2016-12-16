@@ -2,3 +2,5 @@ Executa Generator,
 Corrige o erro que vai falar "return null;" pra "return;"
 Executa Lua
 Prints no console.
+java -jar ../../jflex-1.6.1.jar Lexer.lex
+java -jar ../../java-cup-11a.jar -parser Parser -symbols Sym Parser.cup

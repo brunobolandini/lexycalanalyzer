@@ -51,9 +51,9 @@ comentario = {comentario_em_bloco} | {comentario_curto}
 
 "and" {return new Symbol(Sym.OPERADOR_E);}
 "break" {return new Symbol(Sym.QUEBRA_LACO);}
-"do" {return new Symbol(Sym.LACO_FAZA);}
+"do" {return new Symbol(Sym.LACO_FACA);}
 "elseif" {return new Symbol( Sym.SENAO_SE);}
-"else" {return new Symbol( Sym.SENAO;)}
+"else" {return new Symbol( Sym.SENAO)}
 "end" {return new Symbol( Sym.FIM_DO_LACO);}
 "false" {return new Symbol( Sym.VALOR_FALSO);}
 "for" {return new Symbol( Sym.LACO_PARA);}
@@ -63,12 +63,14 @@ comentario = {comentario_em_bloco} | {comentario_curto}
 "local" {return new Symbol( Sym.DEFINICAO_LOCAL);}
 "nil"  {return new Symbol( Sym.NULO);}
 "not"  {return new Symbol( Sym.NEGACAO);}
-"or"  {return new Symbol( Sym.OU);}
+"or"  {return new Symbol( Sym.OPERADOR_OU);}
 "repeat"  {return new Symbol( Sym.REPETICAO);}
 "then"  {return new Symbol( Sym.ENTAO);}
 "true" {return new Symbol( Sym.VALOR_VERDADEIRO);}
 "until"  {return new Symbol( Sym.ATE_LIMITE_LACO);}
 "while"  {return new Symbol( Sym.LACO_ENQUANTO);}
+"return"  {return new Symbol( Sym.RETORNO);}
+
 
 
 ">=" {return new Symbol( Sym.MAIOR_IGUAL_QUE);}
@@ -100,9 +102,9 @@ comentario = {comentario_em_bloco} | {comentario_curto}
 
 
 
-{number} {return new Symbol( Sym.NUMBER);}
+{number} {return new Symbol( Sym.NUMERO);}
 {brancos} { return; }
 {stringLua} {return new Symbol( Sym.STRING_LUA); }
-{name} {return new Symbol( Sym.NAME); }
+{name} {return new Symbol( Sym.NOME); }
 
 . { throw new RuntimeException("Caractere inválido " + yytext() + " na linha " + yyline + ", coluna " +yycolumn); }
