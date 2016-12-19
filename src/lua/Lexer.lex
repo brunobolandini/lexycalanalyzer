@@ -1,22 +1,12 @@
 package lua;
 
-import java_cup.runtime.*;
+import java_cup.runtime.Symbol;
 
 %%
 
-%{
-
-
-private LuaToken createToken(String name, String value) {
-    return new LuaToken( name, value, yyline, yycolumn);
-}
-
-%}
-
 %cup
 %public
-%class LexicalAnalyzer
-%type LuaToken
+%class Lexer
 %line
 %column
 
@@ -37,13 +27,9 @@ number = {float} | {inteiro} | {expoente}
 comentario = {comentario_em_bloco} | {comentario_curto}
 
 
-//comentario number string id
 %%
 
-//     and       break     do        else      elseif
-//     end       false     for       function  if
-//     in        local     nil       not       or
-//     repeat    return    then      true      until     while
+<YYINITIAL> {
 
 {comentario_curto} {return new Symbol(Sym.COMENTARIO_CURTO);}
 {comentario_em_bloco} {return new Symbol(Sym.COMENTARIO_EM_BLOCO);}
@@ -53,7 +39,7 @@ comentario = {comentario_em_bloco} | {comentario_curto}
 "break" {return new Symbol(Sym.QUEBRA_LACO);}
 "do" {return new Symbol(Sym.LACO_FACA);}
 "elseif" {return new Symbol( Sym.SENAO_SE);}
-"else" {return new Symbol( Sym.SENAO)}
+"else" {return new Symbol( Sym.SENAO);}
 "end" {return new Symbol( Sym.FIM_DO_LACO);}
 "false" {return new Symbol( Sym.VALOR_FALSO);}
 "for" {return new Symbol( Sym.LACO_PARA);}
@@ -103,8 +89,13 @@ comentario = {comentario_em_bloco} | {comentario_curto}
 
 
 {number} {return new Symbol( Sym.NUMERO);}
-{brancos} { return; }
+{brancos} {}
 {stringLua} {return new Symbol( Sym.STRING_LUA); }
 {name} {return new Symbol( Sym.NOME); }
 
-. { throw new RuntimeException("Caractere inválido " + yytext() + " na linha " + yyline + ", coluna " +yycolumn); }
+}
+
+<<EOF>> { return new Symbol( Sym.EOF ); }
+
+
+[^] { throw new Error("Illegal character: "+yytext()+" at line "+(yyline+1)+", column "+(yycolumn+1) ); }

@@ -15,7 +15,7 @@ public class Main {
         String sourceCode = rootPath + subPath + "/program.lua";
  
         try {
-            Parser p = new Parser(new LexicalAnalyzer(new FileReader(sourcecode)));
+            Parser p = new Parser(new Lexer(new FileReader(sourceCode)));
             Object result = p.parse().value;
 
             System.out.println("Compilacao concluida com sucesso...");
