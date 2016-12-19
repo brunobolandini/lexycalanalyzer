@@ -21,6 +21,7 @@ public class Main {
             System.out.println("Compilacao concluida com sucesso...");
         } catch (Exception e) {
             e.printStackTrace();
+            
         }
         
 //        LexicalAnalyzer lexical = new LexicalAnalyzer(new FileReader(sourceCode));

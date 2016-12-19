@@ -1,6 +1,8 @@
 package lua;
 
 import java_cup.runtime.Symbol;
+import java_cup.sym;
+
 
 %%
 
@@ -86,14 +88,14 @@ comentario = {comentario_em_bloco} | {comentario_curto}
 "["  {return new Symbol( Sym.ABRE_COLCHETES);}
 "]" {return new Symbol( Sym.FECHA_COLCHETES);}
 "..." {return new Symbol( Sym.EXPRESSAO_VARARG); }
-".." {return new Symbol( Sym.CONCATERNAR_STRING);}
+".." {return new Symbol( Sym.CONCATENAR_STRING);}
 "." {return new Symbol( Sym.PONTO);}
 "," {return new Symbol( Sym.VIRGULA);}
 
 
 
 {number} {return new Symbol( Sym.NUMERO);}
-{brancos} { return; }
+{brancos} { }
 {stringLua} {return new Symbol( Sym.STRING_LUA); }
 {name} {return new Symbol( Sym.NOME); }
 
