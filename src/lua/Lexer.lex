@@ -16,7 +16,7 @@ private LuaToken createToken(String name, String value) {
 %cup
 %public
 %class LexicalAnalyzer
-%type LuaToken
+%type Symbol
 %line
 %column
 
@@ -53,7 +53,7 @@ comentario = {comentario_em_bloco} | {comentario_curto}
 "break" {return new Symbol(Sym.QUEBRA_LACO);}
 "do" {return new Symbol(Sym.LACO_FACA);}
 "elseif" {return new Symbol( Sym.SENAO_SE);}
-"else" {return new Symbol( Sym.SENAO)}
+"else" {return new Symbol( Sym.SENAO);}
 "end" {return new Symbol( Sym.FIM_DO_LACO);}
 "false" {return new Symbol( Sym.VALOR_FALSO);}
 "for" {return new Symbol( Sym.LACO_PARA);}

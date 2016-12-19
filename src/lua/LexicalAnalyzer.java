@@ -594,7 +594,7 @@ private LuaToken createToken(String name, String value) {
    * @return      the next token
    * @exception   java.io.IOException  if any I/O-Error occurs
    */
-  public LuaToken next_token() throws java.io.IOException {
+  public Symbol next_token() throws java.io.IOException {
     int zzInput;
     int zzAction;
 
@@ -900,7 +900,7 @@ private LuaToken createToken(String name, String value) {
             }
           case 95: break;
           case 42: 
-            { return new Symbol( Sym.SENAO)
+            { return new Symbol( Sym.SENAO);
             }
           case 96: break;
           case 43: 

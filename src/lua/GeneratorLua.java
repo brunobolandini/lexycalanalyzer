@@ -9,7 +9,7 @@ public class GeneratorLua {
         String rootPath = Paths.get("", args).toAbsolutePath(). toString();
         String subPath = "/src/lua/";
 
-        String file = rootPath + subPath + "lua.lex";
+        String file = rootPath + subPath + "Lexer.lex";
 
         File sourceCode = new File(file);
 
