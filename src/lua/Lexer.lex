@@ -1,22 +1,12 @@
 package lua;
 
-import java_cup.runtime.*;
+import java_cup.runtime.Symbol;
 
 %%
 
-%{
-
-
-private LuaToken createToken(String name, String value) {
-    return new LuaToken( name, value, yyline, yycolumn);
-}
-
-%}
-
 %cup
 %public
-%class LexicalAnalyzer
-%type Symbol
+%class Lexer
 %line
 %column
 
