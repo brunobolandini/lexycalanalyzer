@@ -93,7 +93,10 @@ n_nome_de_funcao ::= PONTO NOME n_nome_de_funcao | brancos;
 
 ultimo_comando ::= QUEBRA_LACO | RETORNO lista_de_expressoes | RETORNO;
 
-comando ::= lista_de_variaveis ATRIBUICAO lista_de_expressoes | chamada_de_funcao | FACA bloco FIM_DO_LACO | LACO_ENQUANTO expressao LACO_FACA bloco FIM_DO_LACO | REPETICAO bloco  ATE_LIMITE_LACO  expressao |SE_CONDICIONAL expressao ENTAO bloco n_comando_elseif SENAO  bloco FIM_DO_LACO |SE_CONDICIONAL expressao ENTAO bloco n_comando_elseif FIM_DO_LACO | LACO_PARA NOME ATRIBUICAO expressao VIRGULA expressao LACO_FACA bloco FIM_DO_LACO | LACO_PARA NOME ATRIBUICAO expressao VIRGULA expressao LACO_FACA bloco FIM_DO_LACO | LACO_PARA lista_de_nomes DENTRO lista_de_expressoes LACO_FACA bloco FIM_DO_LACO | FUNCAO nome_da_funcao;
+comando ::= lista_de_variaveis ATRIBUICAO lista_de_expressoes | chamada_de_funcao | FACA bloco FIM_DO_LACO | LACO_ENQUANTO expressao LACO_FACA bloco FIM_DO_LACO | REPETICAO bloco  ATE_LIMITE_LACO  expressao |SE_CONDICIONAL expressao ENTAO bloco n_comando_elseif SENAO  bloco FIM_DO_LACO |SE_CONDICIONAL expressao ENTAO bloco n_comando_elseif FIM_DO_LACO |
+LACO_PARA NOME ATRIBUICAO expressao VIRGULA expressao LACO_FACA bloco FIM_DO_LACO |
+LACO_PARA NOME ATRIBUICAO expressao LACO_FACA bloco FIM_DO_LACO |
+LACO_PARA lista_de_nomes DENTRO lista_de_expressoes LACO_FACA bloco FIM_DO_LACO | FUNCAO nome_da_funcao;
 
 n_comando_elseif ::= SENAO_SE expressao ENTAO bloco n_comando_elseif | brancos;
 
