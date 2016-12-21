@@ -1,11 +1,8 @@
-function factorial(n)
-  local x = 1
-  for i = 2, n do
-    x = x * i --comentario em linha
+n = 0;
+function fact (n)
+  if n == 0 then
+    return 1
+  else
+    return n * fact(1)
   end
-  return x
 end
---[[ Isso e 
-um comentario 
-em bloco --]]
-

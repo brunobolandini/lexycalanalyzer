@@ -1,166 +1,234 @@
+/* CUP Parser */
+
 package lua;
 
-import java_cup.runtime.*;
 import java.util.*;
 import java.io.*;
+import java_cup.runtime.*;
 
 
 parser code {:
-
-    public void report_error(String message, Object info)  {
-        System.out.println("Warning - " + message);
+    public static void main(String[] args) throws Exception{
+        try {
+			Parser parser = new Parser();
+			parser.setScanner(new Lexer(new FileReader (args[0])));
+            parser.parse();
+        } catch ( IOException exception ) {
+            throw new Error( "Unable to open file" );
+        }
     }
 
-    public void report_fatal_error(String message, Object info)  {
-        System.out.println("Error - " + message);
-        System.exit(-1);
+    public void syntax_error (Symbol s) {
+        report_error("Erro de sintaxe na linha: " + (s.right+1) + " e na coluna: " + s.left + ". Texto: -- "+s.value+ " --", null);
     }
+
 
 :};
 
+init with {:               :};
+scan with {: return getScanner().next_token(); :};
+
+//DEFINICAO TOKENS 
+//terminal EXCLAMACAO;
+terminal String NOME, STRING_LUA;
+terminal LACO_FACA, FIM_DO_LACO, LACO_ENQUANTO, REPETICAO, ATE_LIMITE_LACO, SE_CONDICIONAL, ENTAO, SENAO_SE, SENAO, LACO_PARA, DENTRO, FUNCAO, FUNCAO_LOCAL, DEFINICAO_LOCAL, RETORNO, QUEBRA_LACO, NULO,VALOR_FALSO,VALOR_VERDADEIRO, OPERADOR_E, OPERADOR_OU, NEGACAO, brancos;
+terminal ATRIBUICAO, PONTO, DOIS_PONTOS, VIRGULA, ABRE_COLCHETES, FECHA_COLCHETES, EXPRESSAO_VARARG , PONTO_E_VIRGULA, SOMA, SUBTRACAO, MULTIPLICACAO, DIVISAO,  EXPONENCIACAO, RESTO, CONCATENAR_STRING, MENOR_QUE, MENOR_IGUAL_QUE;
+terminal MAIOR_QUE, MAIOR_IGUAL_QUE, IGUAL_COMPARATIVO, DIFERENTE,  TAMANHO, ABRE_PARENTESIS, FECHA_PARENTESIS, ABRE_CHAVES, FECHA_CHAVES;
+terminal Double NUMERO;
+
+non terminal bloco, comando, funcao,  op_un, ultimo_comando, nome_de_funcao, lista_de_variaveis, variavel, lista_de_nomes, lista_de_expressoes, expressao, prefixo_de_expressao,  chamada_de_funcao,  argumentos, corpo_da_funcao,  lista_de_parametros, construtor_de_tabelas, lista_de_campos, campo, separador_de_campos, op_bin;
+non terminal n_lista_de_expressoes, vazio, lista_de_comandos, n_comando_senao, n_repeticao_de_expressoes, n_atribuicao_lista_de_expressoes, n_lista_de_parametros, n_ponto_e_virgula; 
+
+// PRECEDÊNCIA
+precedence nonassoc ABRE_PARENTESIS, FECHA_PARENTESIS; 
+precedence nonassoc VIRGULA ;
 
 
-terminal SOMA, SUBTRACAO, MULTIPLICACAO, DIVISAO, EXPONENCIACAO, RESTO, DOIS_PONTOS, PONTO, QUEBRA_LACO, FACA;
-terminal CONCATENAR_STRING, MENOR_QUE, MAIOR_QUE, MAIOR_IGUAL_QUE, MENOR_IGUAL_QUE, IGUAL_COMPARATIVO, ATRIBUICAO, DIFERENTE;
-terminal OPERADOR_E, OPERADOR_OU, LACO_FACA, SENAO_SE, SENAO, FIM_DO_LACO, VALOR_FALSO;
-terminal LACO_PARA, FUNCAO, SE_CONDICIONAL , DENTRO, DEFINICAO_LOCAL, NULO, NEGACAO, COMENTARIO_CURTO;
-terminal REPETICAO, ENTAO, VALOR_VERDADEIRO, ATE_LIMITE_LACO, LACO_ENQUANTO, RETORNO, COMENTARIO_EM_BLOCO;
-terminal ABRE_CHAVES, FECHA_CHAVES, ABRE_PARENTESIS, FECHA_PARENTESIS, EXPRESSAO_VARARG;
-terminal NUMERO, STRING_LUA, NOME, TAMANHO, VIRGULA, PONTO_E_VIRGULA, ABRE_COLCHETES, FECHA_COLCHETES, brancos;	
+precedence left OPERADOR_OU;
+precedence left OPERADOR_E;
+precedence left MENOR_QUE, MAIOR_QUE, MENOR_IGUAL_QUE, MAIOR_IGUAL_QUE, DIFERENTE, IGUAL_COMPARATIVO;
+precedence left CONCATENAR_STRING;
+precedence left SOMA, SUBTRACAO;
+precedence left MULTIPLICACAO, DIVISAO, RESTO;
+precedence left NEGACAO, TAMANHO;
+precedence left  EXPONENCIACAO;
 
 
-nonterminal op_un, op_bin, separador_de_campos, campo, lista_de_campos;
-nonterminal n_lista_de_campos, construtor_de_tabelas, lista_de_parametros, corpo_da_funcao, funcao;
-nonterminal argumentos, chamada_de_funcao, prefixo_de_expressao, expressao;
-nonterminal lista_de_expressoes, n_lista_de_expressoes, lista_de_nomes, n_lista_de_nomes, variavel, lista_de_variaveis, n_lista_de_variaveis;
-nonterminal nome_de_funcao, n_nome_de_funcao, ultimo_comando, n_comando_elseif;
-nonterminal comando, n_pedaco_de_codigo, pedaco_de_codigo, bloco, nome_da_funcao;
-
-precedence nonassoc ABRE_PARENTESIS, NOME, FECHA_PARENTESIS;
-precedence nonassoc brancos, VIRGULA;
-
-precedence left IGUAL_COMPARATIVO, MENOR_IGUAL_QUE, DIFERENTE, MENOR_QUE, MAIOR_QUE, MAIOR_IGUAL_QUE;
-precedence left SOMA, SUBTRACAO, MULTIPLICACAO, DIVISAO, RESTO, EXPONENCIACAO, CONCATENAR_STRING, OPERADOR_E, OPERADOR_OU;
-precedence left TAMANHO;
-precedence left n_lista_de_expressoes, n_nome_de_funcao, n_lista_de_expressoes, n_lista_de_nomes, n_lista_de_variaveis, n_pedaco_de_codigo;
-
-
-start with pedaco_de_codigo;
+start with bloco;
  
-op_un ::=	 NEGACAO
-		| SUBTRACAO
-		| TAMANHO;
+bloco 			::=    lista_de_comandos ultimo_comando
+                 	       | lista_de_comandos 
+                               | ultimo_comando
+                               | vazio
+;
 
-op_bin ::= SOMA
-		| SUBTRACAO
-		| MULTIPLICACAO
-		| DIVISAO | EXPONENCIACAO
-		| RESTO | CONCATENAR_STRING
-		| MENOR_QUE | MAIOR_QUE
-		| MAIOR_IGUAL_QUE
-		| MENOR_IGUAL_QUE
-		| IGUAL_COMPARATIVO
-		| DIFERENTE
-		| OPERADOR_E
-		| OPERADOR_OU;
+lista_de_comandos	::=	comando n_ponto_e_virgula 
+					|  comando n_ponto_e_virgula  lista_de_comandos
+					;
+					
+						
 
-separador_de_campos ::= VIRGULA
-                        | PONTO_E_VIRGULA;
+ prefixo_de_expressao		::=		variavel
+					| chamada_de_funcao
+					| ABRE_PARENTESIS expressao FECHA_PARENTESIS
+					;
 
-campo ::= ABRE_COLCHETES expressao FECHA_COLCHETES ATRIBUICAO expressao
-        | NOME ATRIBUICAO expressao
-        | expressao;
+ 
+					
+comando        	::=    		lista_de_variaveis  ATRIBUICAO  lista_de_expressoes 
+				| chamada_de_funcao
+				| LACO_FACA  bloco FIM_DO_LACO 
+				| LACO_ENQUANTO  expressao   LACO_FACA  bloco FIM_DO_LACO
+				| REPETICAO  bloco  ATE_LIMITE_LACO  expressao
+                                | SE_CONDICIONAL expressao ENTAO bloco n_comando_senao FIM_DO_LACO
+                                | LACO_PARA  NOME  ATRIBUICAO  expressao  VIRGULA  expressao  
 
-lista_de_campos ::= campo n_lista_de_campos
-                    | campo n_lista_de_campos separador_de_campos;
 
-n_lista_de_campos ::= 	separador_de_campos campo n_lista_de_campos
-                        | brancos;
+				n_repeticao_de_expressoes  LACO_FACA  bloco FIM_DO_LACO
+				| LACO_PARA lista_de_nomes  DENTRO  lista_de_expressoes  LACO_FACA  					
 
-construtor_de_tabelas ::=  ABRE_CHAVES  lista_de_campos FECHA_CHAVES
-                        | ABRE_CHAVES FECHA_CHAVES;
+				bloco FIM_DO_LACO
+				
+                                | FUNCAO  nome_de_funcao corpo_da_funcao  
+		 		| FUNCAO_LOCAL  NOME  corpo_da_funcao
+		 		| DEFINICAO_LOCAL  lista_de_nomes n_atribuicao_lista_de_expressoes
+				;
+					
+ultimo_comando		::=	RETORNO  n_lista_de_expressoes 	
+				| QUEBRA_LACO  
+				; 						
 
-lista_de_parametros ::= lista_de_nomes VIRGULA EXPRESSAO_VARARG
-                        | lista_de_nomes
-                        | EXPRESSAO_VARARG;
-
-corpo_da_funcao ::= ABRE_PARENTESIS lista_de_parametros FECHA_PARENTESIS bloco FIM_DO_LACO
-                    | ABRE_PARENTESIS FECHA_PARENTESIS bloco FIM_DO_LACO;
+n_lista_de_expressoes              ::= lista_de_expressoes 
+                            | vazio ;
 
 funcao ::= FUNCAO corpo_da_funcao;
 
-argumentos ::=  ABRE_PARENTESIS lista_de_expressoes FECHA_PARENTESIS
-                | ABRE_PARENTESIS FECHA_PARENTESIS
-                | construtor_de_tabelas;
+nome_de_funcao		::=     NOME 
+				| NOME PONTO nome_de_funcao 
+				| NOME DOIS_PONTOS NOME 
+						;
+						
 
-chamada_de_funcao ::=   prefixo_de_expressao argumentos
-                        | prefixo_de_expressao PONTO_E_VIRGULA NOME argumentos;
+n_comando_senao			::= 	SENAO  bloco 						
+				| SENAO_SE expressao ENTAO  bloco n_comando_senao
+				| vazio
+				;	
+												
+n_repeticao_de_expressoes		::=     VIRGULA  expressao				
+				| vazio 
+				;
 
-prefixo_de_expressao ::= variavel
-                        | chamada_de_funcao
-                        | ABRE_PARENTESIS expressao FECHA_PARENTESIS;
+lista_de_variaveis			::=     variavel
+				| variavel VIRGULA  lista_de_variaveis
+				;
+	
+				
+lista_de_expressoes			::=     expressao
+				| expressao  VIRGULA   lista_de_expressoes 
+				;
+						
+n_atribuicao_lista_de_expressoes   ::=   ATRIBUICAO  lista_de_expressoes
+                      | vazio
+		      ;	
+					   
+						
+				 
+					 		
+lista_de_nomes    	::=    	NOME 
+			| lista_de_nomes  VIRGULA  NOME
+			;
+					
+variavel				::=		NOME
+						| prefixo_de_expressao ABRE_COLCHETES expressao FECHA_COLCHETES	
+						| prefixo_de_expressao  PONTO NOME
+						;
 
-expressao ::=   NULO
-	        | VALOR_FALSO
-         	| VALOR_VERDADEIRO
-                | NUMERO
-	        | STRING_LUA
-	        | EXPRESSAO_VARARG
-                | funcao
-		| prefixo_de_expressao
-                | construtor_de_tabelas
-                | expressao op_bin expressao
-                | op_un expressao;
+					
+expressao				::=		NULO
+                                                |VALOR_FALSO
+						|VALOR_VERDADEIRO
+						| NUMERO
+                                                | STRING_LUA 
+						|  EXPRESSAO_VARARG 
+						| funcao
+                                                | prefixo_de_expressao
+						| construtor_de_tabelas
+                                                | expressao op_bin expressao 
+						| op_un expressao
+						;	
+	
+					
+	
+	
+ chamada_de_funcao	::= 	 prefixo_de_expressao  argumentos
+			| prefixo_de_expressao DOIS_PONTOS NOME  argumentos
+			;
 
-lista_de_expressoes ::= n_lista_de_expressoes expressao;
+				
+ argumentos			::= 	ABRE_PARENTESIS n_lista_de_expressoes FECHA_PARENTESIS
+				| construtor_de_tabelas
+				| NOME
+				;
 
-n_lista_de_expressoes ::= expressao VIRGULA n_lista_de_expressoes
-                          | brancos;
+corpo_da_funcao		::= 	ABRE_PARENTESIS  n_lista_de_parametros  FECHA_PARENTESIS  bloco  FIM_DO_LACO
+				;
 
-lista_de_nomes ::= NOME n_lista_de_nomes;
+n_lista_de_parametros              ::=  lista_de_parametros 
+                            | vazio 	;			
 
-n_lista_de_nomes ::= VIRGULA NOME n_lista_de_nomes
-                    | brancos;
+lista_de_parametros			::=		lista_de_nomes
+					| lista_de_nomes  VIRGULA   EXPRESSAO_VARARG
+					|  EXPRESSAO_VARARG
+					;	
+	
 
-variavel ::= NOME
-            | prefixo_de_expressao ABRE_COLCHETES expressao FECHA_COLCHETES
-            | lista_de_expressoes VIRGULA NOME;
+construtor_de_tabelas ::=    ABRE_CHAVES lista_de_campos FECHA_CHAVES
+ 			| ABRE_CHAVES FECHA_CHAVES
+ 			; 
 
-lista_de_variaveis ::= variavel n_lista_de_variaveis;
+ 						
+lista_de_campos		 ::= 	campo
+                                | campo separador_de_campos lista_de_campos
+				;
+ 						
+ 						
+campo			::=		ABRE_COLCHETES expressao FECHA_COLCHETES ATRIBUICAO expressao
+					| NOME ATRIBUICAO expressao
+					| expressao
+					;
+						
 
-n_lista_de_variaveis ::=    VIRGULA variavel n_lista_de_variaveis
-                            | brancos;
+separador_de_campos		::=	VIRGULA 
+					| PONTO_E_VIRGULA						
+					;
 
-nome_de_funcao ::= NOME n_nome_de_funcao
-                | NOME n_nome_de_funcao DOIS_PONTOS NOME;
+		
+op_bin			::=		SOMA
+					| SUBTRACAO
+					| MULTIPLICACAO
+					| DIVISAO
+					| RESTO
+					|  EXPONENCIACAO
+					| CONCATENAR_STRING
+					| IGUAL_COMPARATIVO
+					| MENOR_IGUAL_QUE
+					| DIFERENTE
+					| MENOR_QUE
+					| MAIOR_QUE
+					| MAIOR_IGUAL_QUE
+					| OPERADOR_E
+					| OPERADOR_OU
+					;
+						
+op_un			::=		SUBTRACAO
+					| NEGACAO
+					| TAMANHO
+					;
+								
 
-n_nome_de_funcao ::= PONTO NOME n_nome_de_funcao
-                    | brancos;
+						
+n_ponto_e_virgula			::= 	PONTO_E_VIRGULA  | vazio ;
 
-ultimo_comando ::= 	QUEBRA_LACO
-                    | RETORNO lista_de_expressoes
-                    | RETORNO;
 
-comando ::= 	lista_de_variaveis ATRIBUICAO lista_de_expressoes
-                | chamada_de_funcao
-                | FACA bloco FIM_DO_LACO
-                | LACO_ENQUANTO expressao LACO_FACA bloco FIM_DO_LACO
-                | REPETICAO bloco  ATE_LIMITE_LACO  expressao
-                | SE_CONDICIONAL expressao ENTAO bloco n_comando_elseif SENAO  bloco FIM_DO_LACO |SE_CONDICIONAL expressao ENTAO bloco n_comando_elseif FIM_DO_LACO
-                | LACO_PARA NOME ATRIBUICAO expressao VIRGULA expressao LACO_FACA bloco FIM_DO_LACO
-                | LACO_PARA NOME ATRIBUICAO expressao LACO_FACA bloco FIM_DO_LACO
-                | LACO_PARA lista_de_nomes DENTRO lista_de_expressoes LACO_FACA bloco FIM_DO_LACO
-                | FUNCAO nome_da_funcao;
+vazio			::= brancos ;
 
-n_comando_elseif ::= SENAO_SE expressao ENTAO bloco n_comando_elseif
-                    | brancos;
-
-bloco ::= pedaco_de_codigo;
-
-pedaco_de_codigo ::= n_pedaco_de_codigo
-                    | n_pedaco_de_codigo ultimo_comando
-                    | n_pedaco_de_codigo ultimo_comando PONTO_E_VIRGULA;
-
-n_pedaco_de_codigo ::= 	comando n_pedaco_de_codigo
-                        | comando PONTO_E_VIRGULA n_pedaco_de_codigo
-			| brancos;
