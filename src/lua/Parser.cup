@@ -21,6 +21,10 @@ parser code {:
     public void syntax_error (Symbol s) {
         report_error("Erro de sintaxe na linha: " + (s.right+1) + " e na coluna: " + s.left + ". Texto: -- "+s.value+ " --", null);
     }
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.out.println("\nOcorreu um erro na linha " + (s.right)+ ", coluna "+s.left+". Identificador " +
+        s.value + " não reconhecido.");
+	}
 
 
 :};
