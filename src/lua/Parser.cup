@@ -30,14 +30,11 @@ scan with {: return getScanner().next_token(); :};
 
 //DEFINICAO TOKENS 
 //terminal EXCLAMACAO;
-terminal String NOME, STRING_LUA;
-terminal LACO_FACA, FIM_DO_LACO, LACO_ENQUANTO, REPETICAO, ATE_LIMITE_LACO, SE_CONDICIONAL, ENTAO, SENAO_SE, SENAO, LACO_PARA, DENTRO, FUNCAO, FUNCAO_LOCAL, DEFINICAO_LOCAL, RETORNO, QUEBRA_LACO, NULO,VALOR_FALSO,VALOR_VERDADEIRO, OPERADOR_E, OPERADOR_OU, NEGACAO, brancos;
-terminal ATRIBUICAO, PONTO, DOIS_PONTOS, VIRGULA, ABRE_COLCHETES, FECHA_COLCHETES, EXPRESSAO_VARARG , PONTO_E_VIRGULA, SOMA, SUBTRACAO, MULTIPLICACAO, DIVISAO,  EXPONENCIACAO, RESTO, CONCATENAR_STRING, MENOR_QUE, MENOR_IGUAL_QUE;
-terminal MAIOR_QUE, MAIOR_IGUAL_QUE, IGUAL_COMPARATIVO, DIFERENTE,  TAMANHO, ABRE_PARENTESIS, FECHA_PARENTESIS, ABRE_CHAVES, FECHA_CHAVES;
+terminal String NOME, STRING_LUA, COMENTARIO_EM_BLOCO, COMENTARIO_CURTO, LACO_FACA, FIM_DO_LACO, LACO_ENQUANTO, REPETICAO, ATE_LIMITE_LACO, SE_CONDICIONAL, ENTAO, SENAO_SE, SENAO, LACO_PARA, DENTRO, FUNCAO, FUNCAO_LOCAL, DEFINICAO_LOCAL, RETORNO, QUEBRA_LACO, NULO,VALOR_FALSO,VALOR_VERDADEIRO, OPERADOR_E, OPERADOR_OU, NEGACAO, brancos, ATRIBUICAO, PONTO, DOIS_PONTOS, VIRGULA, ABRE_COLCHETES, FECHA_COLCHETES, EXPRESSAO_VARARG , PONTO_E_VIRGULA, SOMA, SUBTRACAO, MULTIPLICACAO, DIVISAO,  EXPONENCIACAO, RESTO, CONCATENAR_STRING, MENOR_QUE, MENOR_IGUAL_QUE, MAIOR_QUE, MAIOR_IGUAL_QUE, IGUAL_COMPARATIVO, DIFERENTE, TAMANHO, ABRE_PARENTESIS, FECHA_PARENTESIS, ABRE_CHAVES, FECHA_CHAVES;
 terminal Double NUMERO;
 
-non terminal bloco, comando, funcao,  op_un, ultimo_comando, nome_de_funcao, lista_de_variaveis, variavel, lista_de_nomes, lista_de_expressoes, expressao, prefixo_de_expressao,  chamada_de_funcao,  argumentos, corpo_da_funcao,  lista_de_parametros, construtor_de_tabelas, lista_de_campos, campo, separador_de_campos, op_bin;
-non terminal n_lista_de_expressoes, vazio, lista_de_comandos, n_comando_senao, n_repeticao_de_expressoes, n_atribuicao_lista_de_expressoes, n_lista_de_parametros, n_ponto_e_virgula; 
+
+non terminal bloco, comando, funcao,  op_un, ultimo_comando, nome_de_funcao, lista_de_variaveis, variavel, lista_de_nomes, lista_de_expressoes, expressao, prefixo_de_expressao,  chamada_de_funcao,  argumentos, corpo_da_funcao,  lista_de_parametros, construtor_de_tabelas, lista_de_campos, campo, separador_de_campos, op_bin, n_lista_de_expressoes, vazio, lista_de_comandos, n_comando_senao, n_repeticao_de_expressoes, n_atribuicao_lista_de_expressoes, n_lista_de_parametros, n_ponto_e_virgula; 
 
 // PRECEDÊNCIA
 precedence nonassoc ABRE_PARENTESIS, FECHA_PARENTESIS; 
@@ -53,24 +50,23 @@ precedence left MULTIPLICACAO, DIVISAO, RESTO;
 precedence left NEGACAO, TAMANHO;
 precedence left  EXPONENCIACAO;
 
-
 start with bloco;
- 
-bloco 			::=    lista_de_comandos ultimo_comando
-                 	       | lista_de_comandos 
-                               | ultimo_comando
-                               | vazio
+
+bloco 			::=    lista_de_comandos ultimo_comando {: System.out.print("bloco ::= lista_de_comandos ultimo_comando\n"); :}
+                 	       | lista_de_comandos {: System.out.print("bloco::= lista_de_comandos\n"); :}
+                               | ultimo_comando  {: System.out.print("bloco::= ultimo_comando\n"); :}
+                               | vazio  {: System.out.print("VAZIO\n"); :}
 ;
 
-lista_de_comandos	::=	comando n_ponto_e_virgula 
-					|  comando n_ponto_e_virgula  lista_de_comandos
+lista_de_comandos	::=	comando n_ponto_e_virgula   {: System.out.print("lista_de_comandos::= comando n_ponto_e_virgula\n"); :}
+					|  comando n_ponto_e_virgula  lista_de_comandos   {:System.out.print("lista_de_comandos::= comando n_ponto_e_virgula\n"); :}
 					;
 					
 						
 
- prefixo_de_expressao		::=		variavel
-					| chamada_de_funcao
-					| ABRE_PARENTESIS expressao FECHA_PARENTESIS
+ prefixo_de_expressao		::=		variavel   {: System.out.print("pref_d_exp::= variavel\n"); :}
+					| chamada_de_funcao   {: System.out.print("pref_de_exp::=chamada_de_funcao\n"); :}
+					| ABRE_PARENTESIS expressao FECHA_PARENTESIS   {: System.out.print("pref_de_exp::= ( EXP )\n"); :}
 					;
 
  
@@ -80,14 +76,9 @@ comando        	::=    		lista_de_variaveis  ATRIBUICAO  lista_de_expressoes
 				| LACO_FACA  bloco FIM_DO_LACO 
 				| LACO_ENQUANTO  expressao   LACO_FACA  bloco FIM_DO_LACO
 				| REPETICAO  bloco  ATE_LIMITE_LACO  expressao
-                                | SE_CONDICIONAL expressao ENTAO bloco n_comando_senao FIM_DO_LACO
-                                | LACO_PARA  NOME  ATRIBUICAO  expressao  VIRGULA  expressao  
-
-
-				n_repeticao_de_expressoes  LACO_FACA  bloco FIM_DO_LACO
-				| LACO_PARA lista_de_nomes  DENTRO  lista_de_expressoes  LACO_FACA  					
-
-				bloco FIM_DO_LACO
+                | SE_CONDICIONAL expressao ENTAO bloco n_comando_senao FIM_DO_LACO
+                | LACO_PARA  NOME  ATRIBUICAO  expressao  VIRGULA  expressao  n_repeticao_de_expressoes  LACO_FACA  bloco FIM_DO_LACO {: System.out.print("comando::= laco_para nome atribuicao exp virgula exp n_rep_exp bloco end lista_de_expressoes laco_faca\n"); :}
+				| LACO_PARA lista_de_nomes  DENTRO  lista_de_expressoes  LACO_FACA bloco FIM_DO_LACO {: System.out.print("comando::= laco_para lista_de_nomes dentro lista_de_expressoes laco_faca\n"); :}
 				
                                 | FUNCAO  nome_de_funcao corpo_da_funcao  
 		 		| FUNCAO_LOCAL  NOME  corpo_da_funcao
@@ -231,4 +222,3 @@ n_ponto_e_virgula			::= 	PONTO_E_VIRGULA  | vazio ;
 
 
 vazio			::= brancos ;
-

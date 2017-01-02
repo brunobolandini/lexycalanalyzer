@@ -16,8 +16,9 @@ public class Main {
  
         try {
         	Parser p = new Parser(new Lexer(new FileReader(sourceCode)));
+        	System.out.println("PRINTA ALGO");
             Object result = p.parse().value;
-
+            System.out.println("PRINTA ALGO");
             System.out.println("Compilacao concluida com sucesso...");
         } catch (Exception e) {
             e.printStackTrace();

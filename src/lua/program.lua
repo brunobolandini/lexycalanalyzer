@@ -1,8 +1,4 @@
-n = 0;
-function fact (n)
-  if n == 0 then
-    return 1
-  else
-    return n * fact(1)
-  end
-end
+for i = 1,3 -- count from 1 to 3
+	do 
+		print(i) 
+end     
