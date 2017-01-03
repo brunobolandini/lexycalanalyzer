@@ -38,172 +38,171 @@ terminal String NOME, STRING_LUA, COMENTARIO_EM_BLOCO, COMENTARIO_CURTO, LACO_FA
 terminal Double NUMERO;
 
 
-non terminal bloco, comando, funcao,  op_un, ultimo_comando, nome_de_funcao, lista_de_variaveis, variavel, lista_de_nomes, lista_de_expressoes, expressao, prefixo_de_expressao,  chamada_de_funcao,  argumentos, corpo_da_funcao,  lista_de_parametros, construtor_de_tabelas, lista_de_campos, campo, separador_de_campos, op_bin, n_lista_de_expressoes, vazio, lista_de_comandos, n_comando_senao, n_repeticao_de_expressoes, n_atribuicao_lista_de_expressoes, n_lista_de_parametros, n_ponto_e_virgula; 
+non terminal bloco, comando, funcao, op_un, ultimo_comando, nome_de_funcao, lista_de_variaveis, variavel, lista_de_nomes, lista_de_expressoes, expressao, prefixo_de_expressao,  chamada_de_funcao,  argumentos, corpo_da_funcao,  lista_de_parametros, construtor_de_tabelas, lista_de_campos, campo, separador_de_campos, op_bin, n_lista_de_expressoes, vazio, lista_de_comandos, n_comando_senao, n_repeticao_de_expressoes, n_atribuicao_lista_de_expressoes, n_lista_de_parametros; 
 
 // PRECEDÊNCIA
-precedence nonassoc ABRE_PARENTESIS, FECHA_PARENTESIS; 
-precedence nonassoc VIRGULA ;
 
-
+precedence left ABRE_PARENTESIS;
+precedence left VIRGULA ;
 precedence left OPERADOR_OU;
 precedence left OPERADOR_E;
+precedence right DOIS_PONTOS;
 precedence left MENOR_QUE, MAIOR_QUE, MENOR_IGUAL_QUE, MAIOR_IGUAL_QUE, DIFERENTE, IGUAL_COMPARATIVO;
 precedence left CONCATENAR_STRING;
 precedence left SOMA, SUBTRACAO;
 precedence left MULTIPLICACAO, DIVISAO, RESTO;
 precedence left NEGACAO, TAMANHO;
-precedence left  EXPONENCIACAO;
+precedence right  EXPONENCIACAO;
 
 start with bloco;
 
-bloco 			::=    lista_de_comandos ultimo_comando {: System.out.print("bloco ::= lista_de_comandos ultimo_comando\n"); :}
-                 	       | lista_de_comandos {: System.out.print("bloco::= lista_de_comandos\n"); :}
-                               | ultimo_comando  {: System.out.print("bloco::= ultimo_comando\n"); :}
-                               | vazio  {: System.out.print("VAZIO\n"); :}
-;
+bloco 					::=    lista_de_comandos ultimo_comando {: System.out.print("bloco ::= lista_de_comandos ultimo_comando\n"); :}
+						| lista_de_comandos {: System.out.print("bloco::= lista_de_comandos\n"); :}
+						| ultimo_comando  {: System.out.print("bloco::= ultimo_comando\n"); :}
+						| {: System.out.print("VAZIO\n"); :}
+						;
 
-lista_de_comandos	::=	comando n_ponto_e_virgula   {: System.out.print("lista_de_comandos::= comando n_ponto_e_virgula\n"); :}
-					|  comando n_ponto_e_virgula  lista_de_comandos   {:System.out.print("lista_de_comandos::= comando n_ponto_e_virgula\n"); :}
-					;
+lista_de_comandos		::=	comando PONTO_E_VIRGULA   {: System.out.print("lista_de_comandos::= comando PONTO_E_VIRGULA\n"); :}
+						|  comando PONTO_E_VIRGULA  lista_de_comandos   {:System.out.print("lista_de_comandos::= comando PONTO_E_VIRGULA\n"); :}
+						;
 					
 						
 
- prefixo_de_expressao		::=		variavel   {: System.out.print("pref_d_exp::= variavel\n"); :}
-					| chamada_de_funcao   {: System.out.print("pref_de_exp::=chamada_de_funcao\n"); :}
-					| ABRE_PARENTESIS expressao FECHA_PARENTESIS   {: System.out.print("pref_de_exp::= ( EXP )\n"); :}
-					;
+ prefixo_de_expressao	::=		variavel   {: System.out.print("pref_d_exp::= variavel\n"); :}
+						| chamada_de_funcao   {: System.out.print("pref_de_exp::=chamada_de_funcao\n"); :}
+						| ABRE_PARENTESIS expressao FECHA_PARENTESIS   {: System.out.print("pref_de_exp::= ( EXP )\n"); :}
+						;
 
  
 					
-comando        	::=    		lista_de_variaveis  ATRIBUICAO  lista_de_expressoes 
-				| chamada_de_funcao
-				| LACO_FACA  bloco FIM_DO_LACO 
-				| LACO_ENQUANTO  expressao   LACO_FACA  bloco FIM_DO_LACO
-				| REPETICAO  bloco  ATE_LIMITE_LACO  expressao
-                | SE_CONDICIONAL expressao ENTAO bloco n_comando_senao FIM_DO_LACO
-                | LACO_PARA  NOME  ATRIBUICAO  expressao  VIRGULA  expressao  n_repeticao_de_expressoes  LACO_FACA  bloco FIM_DO_LACO {: System.out.print("comando::= laco_para nome atribuicao exp virgula exp n_rep_exp bloco end lista_de_expressoes laco_faca\n"); :}
-				| LACO_PARA lista_de_nomes  DENTRO  lista_de_expressoes  LACO_FACA bloco FIM_DO_LACO {: System.out.print("comando::= laco_para lista_de_nomes dentro lista_de_expressoes laco_faca\n"); :}
-				
-                                | FUNCAO  nome_de_funcao corpo_da_funcao  
-		 		| FUNCAO_LOCAL  NOME  corpo_da_funcao
-		 		| DEFINICAO_LOCAL  lista_de_nomes n_atribuicao_lista_de_expressoes
-				;
+comando        			::=  lista_de_variaveis  ATRIBUICAO  lista_de_expressoes 
+						| chamada_de_funcao
+						| LACO_FACA bloco FIM_DO_LACO 
+						| LACO_ENQUANTO expressao LACO_FACA bloco FIM_DO_LACO
+						| REPETICAO bloco ATE_LIMITE_LACO expressao
+        		        | SE_CONDICIONAL expressao ENTAO bloco n_comando_senao FIM_DO_LACO
+                		| LACO_PARA NOME ATRIBUICAO expressao VIRGULA expressao n_repeticao_de_expressoes LACO_FACA bloco FIM_DO_LACO {: System.out.print("comando::= laco_para nome atribuicao exp virgula exp n_rep_exp bloco end lista_de_expressoes laco_faca\n"); :}
+						| LACO_PARA lista_de_nomes DENTRO lista_de_expressoes LACO_FACA bloco FIM_DO_LACO {: System.out.print("comando::= laco_para lista_de_nomes dentro lista_de_expressoes laco_faca\n"); :}
+						| FUNCAO  nome_de_funcao corpo_da_funcao  
+		 				| FUNCAO_LOCAL  NOME  corpo_da_funcao
+		 				| DEFINICAO_LOCAL  lista_de_nomes n_atribuicao_lista_de_expressoes
+						;
 					
-ultimo_comando		::=	RETORNO  n_lista_de_expressoes 	
-				| QUEBRA_LACO  
-				; 						
+ultimo_comando			::=	RETORNO  n_lista_de_expressoes 	
+						| QUEBRA_LACO  
+						; 						
 
-n_lista_de_expressoes              ::= lista_de_expressoes 
-                            | vazio ;
+n_lista_de_expressoes	::= lista_de_expressoes 
+                        | {: System.out.print("VAZIO\n"); :}
+                        ;
 
-funcao ::= FUNCAO corpo_da_funcao;
+funcao				::= FUNCAO corpo_da_funcao;
 
-nome_de_funcao		::=     NOME 
-				| NOME PONTO nome_de_funcao 
-				| NOME DOIS_PONTOS NOME 
+nome_de_funcao			::= NOME 
+						| NOME PONTO nome_de_funcao 
+						| NOME DOIS_PONTOS NOME 
 						;
 						
 
-n_comando_senao			::= 	SENAO  bloco 						
-				| SENAO_SE expressao ENTAO  bloco n_comando_senao
-				| vazio
-				;	
+n_comando_senao			::= SENAO  bloco 						
+						| SENAO_SE expressao ENTAO  bloco n_comando_senao
+						| {: System.out.print("VAZIO\n"); :}
+						;	
 												
-n_repeticao_de_expressoes		::=     VIRGULA  expressao				
-				| vazio 
-				;
+n_repeticao_de_expressoes	::= VIRGULA  expressao				
+							| {: System.out.print("VAZIO\n"); :} 
+							;
 
-lista_de_variaveis			::=     variavel
-				| variavel VIRGULA  lista_de_variaveis
-				;
+lista_de_variaveis			::= variavel
+							| variavel VIRGULA lista_de_variaveis
+							;
 	
 				
-lista_de_expressoes			::=     expressao
-				| expressao  VIRGULA   lista_de_expressoes 
-				;
+lista_de_expressoes			::= expressao
+							| expressao  VIRGULA   lista_de_expressoes 
+							;
 						
-n_atribuicao_lista_de_expressoes   ::=   ATRIBUICAO  lista_de_expressoes
-                      | vazio
-		      ;	
+n_atribuicao_lista_de_expressoes   	::=   ATRIBUICAO  lista_de_expressoes
+                      				| {: System.out.print("VAZIO\n"); :}
+							     	;	
 					   
-						
-				 
-					 		
-lista_de_nomes    	::=    	NOME 
-			| lista_de_nomes  VIRGULA  NOME
-			;
+
+lista_de_nomes				    	::= NOME 
+									| lista_de_nomes  VIRGULA  NOME
+									;
 					
-variavel				::=		NOME
+variavel				::=	NOME
 						| prefixo_de_expressao ABRE_COLCHETES expressao FECHA_COLCHETES	
 						| prefixo_de_expressao  PONTO NOME
 						;
 
 					
-expressao				::=		NULO
-                                                |VALOR_FALSO
-						|VALOR_VERDADEIRO
+expressao				::=	NULO
+						| VALOR_FALSO
+						| VALOR_VERDADEIRO
 						| NUMERO
-                                                | STRING_LUA 
-						|  EXPRESSAO_VARARG 
+						| STRING_LUA 
+						| EXPRESSAO_VARARG 
 						| funcao
-                                                | prefixo_de_expressao
+						| prefixo_de_expressao
 						| construtor_de_tabelas
-                                                | expressao op_bin expressao 
+						| expressao op_bin expressao 
 						| op_un expressao
 						;	
 	
 					
 	
 	
- chamada_de_funcao	::= 	 prefixo_de_expressao  argumentos
-			| prefixo_de_expressao DOIS_PONTOS NOME  argumentos
-			;
+ chamada_de_funcao		::= prefixo_de_expressao argumentos
+						| prefixo_de_expressao DOIS_PONTOS NOME argumentos
+						;
 
 				
- argumentos			::= 	ABRE_PARENTESIS n_lista_de_expressoes FECHA_PARENTESIS
-				| construtor_de_tabelas
-				| NOME
-				;
+ argumentos				::= ABRE_PARENTESIS n_lista_de_expressoes FECHA_PARENTESIS
+						| construtor_de_tabelas
+						| NOME
+						;
 
-corpo_da_funcao		::= 	ABRE_PARENTESIS  n_lista_de_parametros  FECHA_PARENTESIS  bloco  FIM_DO_LACO
-				;
+corpo_da_funcao			::= ABRE_PARENTESIS n_lista_de_parametros FECHA_PARENTESIS bloco FIM_DO_LACO
+						;
 
-n_lista_de_parametros              ::=  lista_de_parametros 
-                            | vazio 	;			
+n_lista_de_parametros	::= lista_de_parametros 
+                        | {: System.out.print("VAZIO\n"); :}
+                        ;			
 
-lista_de_parametros			::=		lista_de_nomes
-					| lista_de_nomes  VIRGULA   EXPRESSAO_VARARG
-					|  EXPRESSAO_VARARG
-					;	
+lista_de_parametros		::= lista_de_nomes
+						| lista_de_nomes VIRGULA EXPRESSAO_VARARG
+						| EXPRESSAO_VARARG
+						;	
 	
 
-construtor_de_tabelas ::=    ABRE_CHAVES lista_de_campos FECHA_CHAVES
- 			| ABRE_CHAVES FECHA_CHAVES
- 			; 
+construtor_de_tabelas 	::= ABRE_CHAVES lista_de_campos FECHA_CHAVES
+ 						| ABRE_CHAVES FECHA_CHAVES
+ 						; 
 
  						
-lista_de_campos		 ::= 	campo
-                                | campo separador_de_campos lista_de_campos
-				;
+lista_de_campos			::= campo
+						| campo separador_de_campos lista_de_campos
+						;
  						
  						
-campo			::=		ABRE_COLCHETES expressao FECHA_COLCHETES ATRIBUICAO expressao
-					| NOME ATRIBUICAO expressao
-					| expressao
-					;
+campo					::= ABRE_COLCHETES expressao FECHA_COLCHETES ATRIBUICAO expressao
+						| NOME ATRIBUICAO expressao
+						| expressao
+						;
 						
 
 separador_de_campos		::=	VIRGULA 
-					| PONTO_E_VIRGULA						
-					;
+						| PONTO_E_VIRGULA						
+						;
 
 		
-op_bin			::=		SOMA
+op_bin				::=	SOMA
 					| SUBTRACAO
 					| MULTIPLICACAO
 					| DIVISAO
 					| RESTO
-					|  EXPONENCIACAO
+					| EXPONENCIACAO
 					| CONCATENAR_STRING
 					| IGUAL_COMPARATIVO
 					| MENOR_IGUAL_QUE
@@ -215,14 +214,10 @@ op_bin			::=		SOMA
 					| OPERADOR_OU
 					;
 						
-op_un			::=		SUBTRACAO
+op_un			::=	SUBTRACAO
 					| NEGACAO
 					| TAMANHO
 					;
 								
 
-						
-n_ponto_e_virgula			::= 	PONTO_E_VIRGULA  | vazio ;
-
-
-vazio			::= brancos ;
+vazio			::= brancos {: RESULT=null; :};
