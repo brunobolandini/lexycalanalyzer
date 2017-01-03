@@ -42,6 +42,7 @@ non terminal bloco, comando, funcao, op_un, ultimo_comando, nome_de_funcao, list
 
 // PRECEDÊNCIA
 
+precedence left PONTO_E_VIRGULA;
 precedence left ABRE_PARENTESIS;
 precedence left VIRGULA ;
 precedence left OPERADOR_OU;
@@ -62,8 +63,10 @@ bloco 					::=    lista_de_comandos ultimo_comando {: System.out.print("bloco ::
 						| {: System.out.print("VAZIO\n"); :}
 						;
 
-lista_de_comandos		::=	comando PONTO_E_VIRGULA   {: System.out.print("lista_de_comandos::= comando PONTO_E_VIRGULA\n"); :}
-						|  comando PONTO_E_VIRGULA  lista_de_comandos   {:System.out.print("lista_de_comandos::= comando PONTO_E_VIRGULA\n"); :}
+lista_de_comandos		::=	comando PONTO_E_VIRGULA {: System.out.print("lista_de_comandos::= comando PONTO_E_VIRGULA\n"); :}
+						| comando PONTO_E_VIRGULA lista_de_comandos {:System.out.print("lista_de_comandos::= comando PONTO_E_VIRGULA\n"); :}
+						| comando{: System.out.print("lista_de_comandos::= comando sem ponto e virgula\n"); :}
+						| comando lista_de_comandos   {:System.out.print("lista_de_comandos::= comando sem ponto e virgula\n"); :}
 						;
 					
 						
@@ -193,7 +196,8 @@ campo					::= ABRE_COLCHETES expressao FECHA_COLCHETES ATRIBUICAO expressao
 						
 
 separador_de_campos		::=	VIRGULA 
-						| PONTO_E_VIRGULA						
+						| PONTO_E_VIRGULA
+						| {: System.out.print("VAZIO\n"); :}				
 						;
 
 		
