@@ -1,4 +1,12 @@
-for i = 1,3 -- count from 1 to 3
-	do 
-		print(i) 
-end     
+-- função que calcula a fatorial de um número
+-- recebe um número "n"
+function fat(n)
+	if n == 0 then
+		return 1
+	else
+		return n * fat(n - 1)
+	end
+end
+
+-- imprime o fatorial
+print("Fatorial: ", fat(5))

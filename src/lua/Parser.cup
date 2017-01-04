@@ -34,11 +34,11 @@ scan with {: return getScanner().next_token(); :};
 
 //DEFINICAO TOKENS 
 //terminal EXCLAMACAO;
-terminal String NOME, STRING_LUA, COMENTARIO_EM_BLOCO, COMENTARIO_CURTO, LACO_FACA, FIM_DO_LACO, LACO_ENQUANTO, REPETICAO, ATE_LIMITE_LACO, SE_CONDICIONAL, ENTAO, SENAO_SE, SENAO, LACO_PARA, DENTRO, FUNCAO, FUNCAO_LOCAL, DEFINICAO_LOCAL, RETORNO, QUEBRA_LACO, NULO,VALOR_FALSO,VALOR_VERDADEIRO, OPERADOR_E, OPERADOR_OU, NEGACAO, brancos, ATRIBUICAO, PONTO, DOIS_PONTOS, VIRGULA, ABRE_COLCHETES, FECHA_COLCHETES, EXPRESSAO_VARARG , PONTO_E_VIRGULA, SOMA, SUBTRACAO, MULTIPLICACAO, DIVISAO,  EXPONENCIACAO, RESTO, CONCATENAR_STRING, MENOR_QUE, MENOR_IGUAL_QUE, MAIOR_QUE, MAIOR_IGUAL_QUE, IGUAL_COMPARATIVO, DIFERENTE, TAMANHO, ABRE_PARENTESIS, FECHA_PARENTESIS, ABRE_CHAVES, FECHA_CHAVES;
-terminal Double NUMERO;
+terminal Token String NOME, STRING_LUA, COMENTARIO_EM_BLOCO, COMENTARIO_CURTO, LACO_FACA, FIM_DO_LACO, LACO_ENQUANTO, REPETICAO, ATE_LIMITE_LACO, SE_CONDICIONAL, ENTAO, SENAO_SE, SENAO, LACO_PARA, DENTRO, FUNCAO, FUNCAO_LOCAL, DEFINICAO_LOCAL, RETORNO, QUEBRA_LACO, NULO,VALOR_FALSO,VALOR_VERDADEIRO, OPERADOR_E, OPERADOR_OU, NEGACAO, brancos, ATRIBUICAO, PONTO, DOIS_PONTOS, VIRGULA, ABRE_COLCHETES, FECHA_COLCHETES, EXPRESSAO_VARARG , PONTO_E_VIRGULA, SOMA, SUBTRACAO, MULTIPLICACAO, DIVISAO,  EXPONENCIACAO, RESTO, CONCATENAR_STRING, MENOR_QUE, MENOR_IGUAL_QUE, MAIOR_QUE, MAIOR_IGUAL_QUE, IGUAL_COMPARATIVO, DIFERENTE, TAMANHO, ABRE_PARENTESIS, FECHA_PARENTESIS, ABRE_CHAVES, FECHA_CHAVES;
+terminal Token Double NUMERO;
 
 
-non terminal bloco, comando, funcao, op_un, ultimo_comando, nome_de_funcao, lista_de_variaveis, variavel, lista_de_nomes, lista_de_expressoes, expressao, prefixo_de_expressao,  chamada_de_funcao,  argumentos, corpo_da_funcao,  lista_de_parametros, construtor_de_tabelas, lista_de_campos, campo, separador_de_campos, op_bin, n_lista_de_expressoes, vazio, lista_de_comandos, n_comando_senao, n_repeticao_de_expressoes, n_atribuicao_lista_de_expressoes, n_lista_de_parametros; 
+non terminal No bloco, comando, funcao, op_un, ultimo_comando, nome_de_funcao, lista_de_variaveis, variavel, lista_de_nomes, lista_de_expressoes, expressao, prefixo_de_expressao,  chamada_de_funcao,  argumentos, corpo_da_funcao,  lista_de_parametros, construtor_de_tabelas, lista_de_campos, campo, separador_de_campos, op_bin, n_lista_de_expressoes, vazio, lista_de_comandos, n_comando_senao, n_repeticao_de_expressoes, n_atribuicao_lista_de_expressoes, n_lista_de_parametros; 
 
 // PRECEDÊNCIA
 
@@ -57,15 +57,33 @@ precedence right  EXPONENCIACAO;
 
 start with bloco;
 
-bloco 					::=    lista_de_comandos ultimo_comando {: System.out.print("bloco ::= lista_de_comandos ultimo_comando\n"); :}
-						| lista_de_comandos {: System.out.print("bloco::= lista_de_comandos\n"); :}
-						| ultimo_comando  {: System.out.print("bloco::= ultimo_comando\n"); :}
-						| {: System.out.print("VAZIO\n"); :}
+bloco 					::= lista_de_comandos:lc ultimo_comando:ul {: 
+						 		No no = new No(new Token("#"));
+						 		no.addFilhos(lc);
+						 		no.addFilhos(uc);
+						 		RESULT = no;
+						 :}
+						| lista_de_comandos:lc {: 
+								RESULT = lc;
+						:}
+						| ultimo_comando:uc  {: 
+								RESULT = uc;
+						:}
+						| {: RESULT = new No(); :}
 						;
 
-lista_de_comandos		::=	comando PONTO_E_VIRGULA {: System.out.print("lista_de_comandos::= comando PONTO_E_VIRGULA\n"); :}
-						| comando PONTO_E_VIRGULA lista_de_comandos {:System.out.print("lista_de_comandos::= comando PONTO_E_VIRGULA\n"); :}
-						| comando{: System.out.print("lista_de_comandos::= comando sem ponto e virgula\n"); :}
+lista_de_comandos		::=	comando:c PONTO_E_VIRGULA:pv {:
+								No no = new No(new Token("#"));
+								no.addFilhos(c);
+								no.addFilhos(pv);
+								RESULT = no;	
+						:}
+						| comando PONTO_E_VIRGULA lista_de_comandos {:
+								RESULT = uc;
+						:}
+						| comando{:
+								RESULT = uc;
+						:}
 						| comando lista_de_comandos   {:System.out.print("lista_de_comandos::= comando sem ponto e virgula\n"); :}
 						;
 					
