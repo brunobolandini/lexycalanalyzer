@@ -9,7 +9,7 @@ import java_cup.sym;
 %{
 
 private LuaToken createToken(String name, String value) {
-    return new PascalToken( name, value, yyline, yycolumn);
+    return new LuaToken( name, value, yyline, yycolumn);
 }
 
 %}
