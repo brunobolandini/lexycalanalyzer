@@ -14,9 +14,11 @@ public class Main {
         String sourceCode = rootPath + subPath + "/program.lua";
  
         try {
-        	Parser p = new Parser(new Lexer(new FileReader(sourceCode)));
+        	FileReader fr = new FileReader(sourceCode);
+        	Lexer l = new Lexer(fr);
+        	Parser p = new Parser(l);
             Object result = p.parse().value;
-            System.out.println("Compilacao concluida com sucesso...");
+            System.out.println("Compilacao concluida com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
         }

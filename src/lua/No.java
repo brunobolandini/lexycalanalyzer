@@ -41,10 +41,10 @@ public class No {
         	String tabulacao = "", espaco = "";
             
             if(folha) {
-            	tabulacao = "|__ ";
+            	tabulacao = " -- ";
             	espaco ="    ";
             } else{
-            	tabulacao = "";
+            	tabulacao = "|-- ";
             	espaco = "|   ";
             }    
             
