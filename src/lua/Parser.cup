@@ -22,7 +22,7 @@ parser code {:
         s.value+ " --", null);
     }
     
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception {
         System.out.println("\nOcorreu um erro na linha " + (s.right)+ ", coluna "+s.left+". Identificador " +
         s.value + " não reconhecido.");
 	}

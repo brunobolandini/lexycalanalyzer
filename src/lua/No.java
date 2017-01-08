@@ -32,17 +32,20 @@ public class No {
         return "";
     }
     
+    public void imprime() {
+    	this.imprime("", false);
+    }
+    
     private void imprime(String prefixo, boolean folha) {
         if(this.token != null && this.token.valor != null) {
         	String tabulacao = "", espaco = "";
             
             if(folha) {
-            	tabulacao = "└── ";
+            	tabulacao = "|__ ";
             	espaco ="    ";
-            } 
-            else {
-            	tabulacao = "├── ";
-                espaco = "│   ";
+            } else{
+            	tabulacao = "";
+            	espaco = "|   ";
             }    
             
             System.out.println(prefixo + tabulacao + this.token.valor);
@@ -55,9 +58,5 @@ public class No {
             if (filhos.size() > 0 && filhos.get(filhos.size() - 1) != null)
                 filhos.get(filhos.size() - 1).imprime(prefixo + espaco, true);
         }
-    }
-    
-    public void imprime() {
-    	this.imprime("", true);
     }
 }

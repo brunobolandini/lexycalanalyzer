@@ -9,6 +9,6 @@ public class Token {
 	
 	@Override
 	public String toString() {
-		return valor;
+		return this.valor;
 	}
 }
