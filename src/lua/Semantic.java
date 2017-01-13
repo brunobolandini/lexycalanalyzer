@@ -43,47 +43,126 @@ public class Semantic {
 		
 		if(!token.isEmpty()) {
 			
-			//se for declaracao, armazena a variavel na tabela
+			//se for local, armazena a variavel ou variaveis na tabela
+			//se for function, armazena o nome da funcao e os argumentos na tabela
+			//depois desce na recursao
 			if(token.equals("local") || token.equals("function")) {
-				
-				//salva a variavel na tabela
-				TableSymbol declaredVariable;
-				switch(token) {
-					case "local":
-						declaredVariable = new TableSymbol(this.no.getFilho(0).getToken(), "variable");
-						this.declaradas.add(declaredVariable);
-						break;
-					case "function":
-						declaredVariable = new TableSymbol(this.no.getFilho(0).getToken(), "function");
-						this.declaradas.add(declaredVariable);
-						//se tiver algum argumento, tem que ser adicionado tambem
-						if (this.no.getNeto(1,1) != null && !this.no.getNeto(1,1).getToken().equals(")")) {
-							declaredVariable = new TableSymbol(this.no.getNeto(1,1).getToken(), "argument");
-							this.declaradas.add(declaredVariable);
-						}							
-						break;
-					default:
-						declaredVariable = new TableSymbol(this.no.getFilho(0).getToken());
-						this.declaradas.add(declaredVariable);
-						break;
+				if (!this.logicLocalFunction())
+					return false;
+			}
+			
+			//se for palavra reservada, desce na recursao
+			else if (this.reservada(token)) {
+				if (!this.logicReserved())
+					return false;
+			}
+			
+			//caso contrario, so pode ser nome ou valor
+			else {
+				if (!this.logicNameOrNumber())
+					return false;
+			}
+			
+		}
+		
+		return true;
+	}
+	
+	public Boolean logicLocalFunction() {
+		String token = this.no.getToken();
+		TableSymbol declaredVariable;
+		
+		switch(token) {
+			case "local":
+				if(!this.declarada(token)) {
+					declaredVariable = new TableSymbol(this.no.getFilho(0).getToken(), "variable");
+					this.declaradas.add(declaredVariable);
 				}
-				
+				else {
+					System.out.println(token + " já foi declarado!");
+					return false;
+				}
+				//se for declaracao de mais de uma variavel na mesma linha
 				if (this.no.getFilhos() != null) {
-					//Continua a recursao para os filhos, com excessao do filho com o nome declarado
-					for (No filho : this.no.getFilhos()) {
-						if (!filho.getToken().equals(declaredVariable.getId()) && filho != null) {
-							//Desce recursivamente, passando a tabela atualizada
-							Semantic novaAnalise = new Semantic(filho, this.declaradas);
-							if (!novaAnalise.doSemanticAnalysis())
-								return false;;
+					for (int i = 1; i < this.no.getFilhos().size(); i++) {
+						if (this.no.getFilho(i).getToken().equals(",") || this.no.getFilho(i+1) != null) {
+							declaredVariable = new TableSymbol(this.no.getFilho(i+1).getToken(), "variable");
+							this.declaradas.add(declaredVariable);
 						}
 					}
 				}
-			}
+				break;
 			
-			//se nao, verifica se e palavra reservada
-			//caso sim, desce na recursao
-			else if (this.reservada(token)) {
+			case "function":
+				//adiciona a tabela o nome da funcao
+				declaredVariable = new TableSymbol(this.no.getFilho(0).getToken(), "function");
+				this.declaradas.add(declaredVariable);
+				
+				//se tiver argumentos, tem que ser adicionados tambems
+				if (this.no.getFilhos() != null && this.no.getFilho(1) != null && 
+					this.no.getFilho(1).getFilhos()!= null && this.no.getNeto(1, 1) != null && 
+					this.no.getNeto(1, 1).getFilhos() != null) {
+					for (int i = 0; i < this.no.getNeto(1, 1).getFilhos().size(); i++) {
+						declaredVariable = new TableSymbol(this.no.getBisneto(1,1,i).getToken(), "argument");
+						this.declaradas.add(declaredVariable);
+					}
+				}							
+				break;
+			
+			default:
+				declaredVariable = new TableSymbol(this.no.getFilho(0).getToken());
+				this.declaradas.add(declaredVariable);
+				break;
+		}
+		
+		if (this.no.getFilhos() != null) {
+			//Continua a recursao para os filhos, com excessao do filho com o nome declarado
+			for (No filho : this.no.getFilhos()) {
+				if (!this.declarada(filho.getToken()) && filho != null) {
+					Semantic novaAnalise = new Semantic(filho, this.declaradas);
+					//Desce recursivamente, passando a tabela atualizada
+					if (!novaAnalise.doSemanticAnalysis())
+						return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+
+	public Boolean logicReserved() {
+		String token = this.no.getToken();
+		
+		//tratamento especial para '#' quando for chamada de parametros
+		if (token.equals("#")) {
+			if (this.no.getFilhos().size() >= 4) {
+				//Neste caso, o no '#' tem 4 filhos ou mais
+				//e tem '(', '#' e ')' como filhos, o que
+				//significa que e uma declaracao de metodo
+				if (this.no.getFilho(0).getToken().equals("(") &&
+					this.no.getFilho(1).getToken().equals("#") &&
+					this.no.getFilho(2).getToken().equals(")")) {
+						//Os nos '(' e ')' nao precisam de entrar na recursao
+						//entao so e chamada a recursao para o '#'
+						Semantic novaAnalise = new Semantic(this.no.getFilho(1), this.declaradas);
+						if (!novaAnalise.doSemanticAnalysis())
+							return false;
+						
+						//e entao para todos os outros os filhos
+						//porem, como e um novo escopo, a tabela e esvaziada
+						for(int i = 3; i < this.no.getFilhos().size(); i++ ){
+							//acessa as variaveis passadas no parametro para gerar um novo escopo
+							List<TableSymbol> novoEscopo = this.getNewScope(this.no.getFilho(1));
+							//adiciona o nome da funcao no novo escopo para haver recursao
+							novoEscopo.add(this.getFunctionInScope());
+							novaAnalise = new Semantic(this.no.getFilho(i), novoEscopo);
+							if (!novaAnalise.doSemanticAnalysis())
+								return false;
+						}
+				}
+			}
+			//caso o tamanho seja menor que 4, eram apenas parentesis normais
+			else {
 				if (this.no.getFilhos() != null) {
 					for (No filho : this.no.getFilhos()) {
 						if (filho != null) {
@@ -95,42 +174,62 @@ public class Semantic {
 					}
 				}
 			}
-			
-			//se nao, e um nome ou valor
-			else {
-				
-				//VERIFICADO:
-				//1 - SE A VARIAVEL FOI DECLARADA
-				//2 - SE COMECA COM UM NUMERO, E UM NUMERO E NAO UM NOME
-				//3 - VERIFICAR SE E UMA STRING (SE COMECA COM ")
-				//4 - SE E ARGUMENTO DE UMA FUNCAO, AI NAO PRECISA ESTAR DECLARADO
-				
-				//FALTA VERIFICAR:
-				//
-				//2 - CASO DO PRINT NAO DECLARADO
-				//OUTROS A VERIFICAR
-				
-				
-				//se constar na tabela de declaracoes, desce recursivamente
-				if(this.declarada(token) || Character.isDigit(token.charAt(0)) || token.charAt(0) == '"') {
-					if (this.no.getFilhos() != null) {
-						for (No filho : this.no.getFilhos()) {
-							if (filho != null) {
-								//Desce recursivamente, passando a tabela atualizada
-								Semantic novaAnalise = new Semantic(filho, this.declaradas);
-								if (!novaAnalise.doSemanticAnalysis())
-									return false;
-								
-							}
-						}
-					}
-				}
-				else {
-					System.out.println("Erro Semantico: '" + token + "' nao foi declarado no escopo!");
-					return false;
+		}
+		
+		//tratamento de todos os outros tokens e palavras reservadas
+		else if (this.no.getFilhos() != null) {
+			for (No filho : this.no.getFilhos()) {
+				if (filho != null) {
+					//Desce recursivamente, passando a tabela atualizada
+					Semantic novaAnalise = new Semantic(filho, this.declaradas);
+					if (!novaAnalise.doSemanticAnalysis())
+						return false;
 				}
 			}
 		}
+		
+		return true;
+	}
+	
+	public Boolean logicNameOrNumber() {
+		String token = this.no.getToken();
+		TableSymbol declaredVariable;
+
+		//se constar na tabela de declaracoes, desce recursivamente
+		if(this.declarada(token)) {
+			if (this.no.getFilhos() != null) {
+				for (No filho : this.no.getFilhos()) {
+					if (filho != null) {
+						//Desce recursivamente, passando a tabela atualizada
+						Semantic novaAnalise = new Semantic(filho, this.declaradas);
+						if (!novaAnalise.doSemanticAnalysis())
+							return false;
+						
+					}
+				}
+			}
+		}
+		//se nao, verifica se comeca com digito ou é uma string, e desce recursivamente
+		else if(Character.isDigit(token.charAt(0)) || token.charAt(0) == '"') {
+			if (this.no.getFilhos() != null) {
+				for (No filho : this.no.getFilhos()) {
+					if (filho != null) {
+						//Desce recursivamente, passando a tabela atualizada
+						Semantic novaAnalise = new Semantic(filho, this.declaradas);
+						if (!novaAnalise.doSemanticAnalysis())
+							return false;
+						
+					}
+				}
+			}
+		}
+		
+		//se nao, significa que a variavel nao foi declarada dentro do escopo atual
+		else {
+			System.out.println("Erro Semantico: '" + token + "' nao foi declarado no escopo!");
+			return false;
+		}
+		
 		return true;
 	}
 	
@@ -141,11 +240,37 @@ public class Semantic {
 		}
 		return false;
 	}
+	
+	public List<TableSymbol> getNewScope(No no) {
+		List<TableSymbol> novoEscopo = new ArrayList<>();
+		for(No filho : no.getFilhos()) {
+			if (!filho.getToken().equals(","))
+				novoEscopo.add(new TableSymbol(filho.getToken(), "argument"));
+		}
+		return novoEscopo;
+	}
+	
+	public TableSymbol getFunctionInScope() {
+		for(int i = this.declaradas.size()-1; i >= 0; i--) {
+			TableSymbol tb = this.declaradas.get(i);
+			if (tb.getType().equals("function"))
+				return tb;
+		}		
+		return null;
+	}
+	
+	public String getTableSymbolType(String token) {
+		for (TableSymbol tb : this.declaradas) {
+			if (tb.getId().equals(token))
+				return tb.getType();
+		}
+		return null;
+	}
 
 	public Boolean reservada(String token) {
 		String[] palavrasReservadas = {"and","break","do","elseif","else","end","false","for",
 									   "function","local function","if","in","local","nil","not",
-									   "or","repeat","then","true","until","while","return"};
+									   "or", "print", "repeat","then","true","until","while","return"};
 		String[] tokens = {">=","<=",">","<","==","=","~=","+","-","*","/","^","%",
 						   "#",";",":","(",")","{","}","[","]","...","..",".",","};
 		
@@ -160,6 +285,5 @@ public class Semantic {
 		}
 
 		return false;
-	}
-	
+	}	
 }
