@@ -161,12 +161,18 @@ comando        						::=  lista_de_variaveis:lista_de_variaveis ATRIBUICAO:atrib
 									:}
 			        		        | SE_CONDICIONAL:se_condicional expressao:expressao ENTAO:entao bloco:bloco comando_senao:comando_senao FIM_DO_LACO:fim_do_laco
 			                		{:
-										No no = new No(se_condicional);
-										no.addFilho(expressao);
-										no.addFilho(entao);
-										no.addFilho(bloco);
+										No no = new No(new Token("#"));
+										
+										
+										No se = new No(se_condicional);
+										se.addFilho(expressao);
+										se.addFilho(entao);
+										se.addFilho(bloco);
+			
+										no.addFilho(se);
 										no.addFilho(comando_senao);
 										no.addFilho(fim_do_laco);
+										
 										RESULT = no;
 									:}
 			                		| LACO_PARA:laco_para NOME:nome ATRIBUICAO:atribuicao expressao:expressao VIRGULA:virgula expressao:expressao2 repeticao_de_expressoes:repeticao_de_expressoes LACO_FACA:laco_faca bloco:bloco FIM_DO_LACO:fim_do_laco
