@@ -769,19 +769,19 @@ public class Lexer implements java_cup.runtime.Scanner {
             }
           case 56: break;
           case 2: 
-            { System.out.printf(" -"); return new Symbol(Sym.SUBTRACAO, createToken(yytext()));
+            { System.out.println("-"); return new Symbol(Sym.SUBTRACAO, createToken(yytext()));
             }
           case 57: break;
           case 3: 
-            { System.out.printf(" ["); return new Symbol(Sym.ABRE_COLCHETES, createToken(yytext()));
+            { System.out.println("["); return new Symbol(Sym.ABRE_COLCHETES, createToken(yytext()));
             }
           case 58: break;
           case 4: 
-            { System.out.printf(" }"); return new Symbol(Sym.FECHA_CHAVES, createToken(yytext()));
+            { System.out.println("}"); return new Symbol(Sym.FECHA_CHAVES, createToken(yytext()));
             }
           case 59: break;
           case 5: 
-            { System.out.printf(" ]"); return new Symbol(Sym.FECHA_COLCHETES, createToken(yytext()));
+            { System.out.println("]"); return new Symbol(Sym.FECHA_COLCHETES, createToken(yytext()));
             }
           case 60: break;
           case 6: 
@@ -789,199 +789,199 @@ public class Lexer implements java_cup.runtime.Scanner {
             }
           case 61: break;
           case 7: 
-            { System.out.printf(" +"); return new Symbol(Sym.SOMA, createToken(yytext()));
+            { System.out.println("+"); return new Symbol(Sym.SOMA, createToken(yytext()));
             }
           case 62: break;
           case 8: 
-            { System.out.printf(" number"); return new Symbol(Sym.NUMERO, createToken(yytext()));
+            { System.out.println("number"); return new Symbol(Sym.NUMERO, createToken(yytext()));
             }
           case 63: break;
           case 9: 
-            { System.out.printf(" ponto"); return new Symbol(Sym.PONTO, createToken(yytext()));
+            { System.out.println("ponto"); return new Symbol(Sym.PONTO, createToken(yytext()));
             }
           case 64: break;
           case 10: 
-            { System.out.printf(" nome"); return new Symbol(Sym.NOME, createToken(yytext()));
+            { System.out.println("nome"); return new Symbol(Sym.NOME, createToken(yytext()));
             }
           case 65: break;
           case 11: 
-            { System.out.printf(" >"); return new Symbol(Sym.MAIOR_QUE, createToken(yytext()));
+            { System.out.println(">"); return new Symbol(Sym.MAIOR_QUE, createToken(yytext()));
             }
           case 66: break;
           case 12: 
-            { System.out.printf(" ="); return new Symbol(Sym.ATRIBUICAO, createToken(yytext()));
+            { System.out.println("="); return new Symbol(Sym.ATRIBUICAO, createToken(yytext()));
             }
           case 67: break;
           case 13: 
-            { System.out.printf(" <"); return new Symbol(Sym.MENOR_QUE, createToken(yytext()));
+            { System.out.println("<"); return new Symbol(Sym.MENOR_QUE, createToken(yytext()));
             }
           case 68: break;
           case 14: 
-            { System.out.printf(" *"); return new Symbol(Sym.MULTIPLICACAO, createToken(yytext()));
+            { System.out.println("*"); return new Symbol(Sym.MULTIPLICACAO, createToken(yytext()));
             }
           case 69: break;
           case 15: 
-            { System.out.printf(" /"); return new Symbol(Sym.DIVISAO, createToken(yytext()));
+            { System.out.println("/"); return new Symbol(Sym.DIVISAO, createToken(yytext()));
             }
           case 70: break;
           case 16: 
-            { System.out.printf(" ^"); return new Symbol(Sym.EXPONENCIACAO, createToken(yytext()));
+            { System.out.println("^"); return new Symbol(Sym.EXPONENCIACAO, createToken(yytext()));
             }
           case 71: break;
           case 17: 
-            { System.out.printf(" %"); return new Symbol(Sym.RESTO, createToken(yytext()));
+            { System.out.println("%"); return new Symbol(Sym.RESTO, createToken(yytext()));
             }
           case 72: break;
           case 18: 
-            { System.out.printf(" #"); return new Symbol(Sym.TAMANHO, createToken(yytext()));
+            { System.out.println("#"); return new Symbol(Sym.TAMANHO, createToken(yytext()));
             }
           case 73: break;
           case 19: 
-            { System.out.printf(" PONTO_E_VIRGULA"); return new Symbol(Sym.PONTO_E_VIRGULA, createToken(yytext()));
+            { System.out.println("PONTO_E_VIRGULA"); return new Symbol(Sym.PONTO_E_VIRGULA, createToken(yytext()));
             }
           case 74: break;
           case 20: 
-            { System.out.printf(" :"); return new Symbol(Sym.DOIS_PONTOS, createToken(yytext()));
+            { System.out.println(":"); return new Symbol(Sym.DOIS_PONTOS, createToken(yytext()));
             }
           case 75: break;
           case 21: 
-            { System.out.printf(" ("); return new Symbol(Sym.ABRE_PARENTESIS, createToken(yytext()));
+            { System.out.println("("); return new Symbol(Sym.ABRE_PARENTESIS, createToken(yytext()));
             }
           case 76: break;
           case 22: 
-            { System.out.printf(" )"); return new Symbol(Sym.FECHA_PARENTESIS, createToken(yytext()));
+            { System.out.println(")"); return new Symbol(Sym.FECHA_PARENTESIS, createToken(yytext()));
             }
           case 77: break;
           case 23: 
-            { System.out.printf(" {"); return new Symbol(Sym.ABRE_CHAVES, createToken(yytext()));
+            { System.out.println("{"); return new Symbol(Sym.ABRE_CHAVES, createToken(yytext()));
             }
           case 78: break;
           case 24: 
-            { System.out.printf(" VIRGULA"); return new Symbol(Sym.VIRGULA, createToken(yytext()));
+            { System.out.println("VIRGULA"); return new Symbol(Sym.VIRGULA, createToken(yytext()));
             }
           case 79: break;
           case 25: 
-            { System.out.printf(" dois pontos"); return new Symbol(Sym.CONCATENAR_STRING, createToken(yytext()));
+            { System.out.println("dois pontos"); return new Symbol(Sym.CONCATENAR_STRING, createToken(yytext()));
             }
           case 80: break;
           case 26: 
-            { System.out.printf(" StringLua"); return new Symbol(Sym.STRING_LUA, createToken(yytext()));
+            { System.out.println("StringLua"); return new Symbol(Sym.STRING_LUA, createToken(yytext()));
             }
           case 81: break;
           case 27: 
-            { System.out.printf(" LACO FACA"); return new Symbol(Sym.LACO_FACA, createToken(yytext()));
+            { System.out.println("LACO FACA"); return new Symbol(Sym.LACO_FACA, createToken(yytext()));
             }
           case 82: break;
           case 28: 
-            { System.out.printf(" OPERADOR_OU"); return new Symbol(Sym.OPERADOR_OU, createToken(yytext()));
+            { System.out.println("OPERADOR_OU"); return new Symbol(Sym.OPERADOR_OU, createToken(yytext()));
             }
           case 83: break;
           case 29: 
-            { System.out.printf(" DENTRO"); return new Symbol(Sym.DENTRO, createToken(yytext()));
+            { System.out.println("DENTRO"); return new Symbol(Sym.DENTRO, createToken(yytext()));
             }
           case 84: break;
           case 30: 
-            { System.out.printf(" SE"); return new Symbol(Sym.SE_CONDICIONAL, createToken(yytext()));
+            { System.out.println("SE"); return new Symbol(Sym.SE_CONDICIONAL, createToken(yytext()));
             }
           case 85: break;
           case 31: 
-            { System.out.printf(" >="); return new Symbol(Sym.MAIOR_IGUAL_QUE, createToken(yytext()));
+            { System.out.println(">="); return new Symbol(Sym.MAIOR_IGUAL_QUE, createToken(yytext()));
             }
           case 86: break;
           case 32: 
-            { System.out.printf(" =="); return new Symbol(Sym.IGUAL_COMPARATIVO, createToken(yytext()));
+            { System.out.println("=="); return new Symbol(Sym.IGUAL_COMPARATIVO, createToken(yytext()));
             }
           case 87: break;
           case 33: 
-            { System.out.printf(" <="); return new Symbol(Sym.MENOR_IGUAL_QUE, createToken(yytext()));
+            { System.out.println("<="); return new Symbol(Sym.MENOR_IGUAL_QUE, createToken(yytext()));
             }
           case 88: break;
           case 34: 
-            { System.out.printf(" ~="); return new Symbol(Sym.DIFERENTE, createToken(yytext()));
+            { System.out.println("~="); return new Symbol(Sym.DIFERENTE, createToken(yytext()));
             }
           case 89: break;
           case 35: 
-            { System.out.printf(" tres pontos"); return new Symbol(Sym.EXPRESSAO_VARARG, createToken(yytext()));
+            { System.out.println("tres pontos"); return new Symbol(Sym.EXPRESSAO_VARARG, createToken(yytext()));
             }
           case 90: break;
           case 36: 
-            { System.out.printf(" OPERADOR-E"); return new Symbol(Sym.OPERADOR_E, createToken(yytext()));
+            { System.out.println("OPERADOR-E"); return new Symbol(Sym.OPERADOR_E, createToken(yytext()));
             }
           case 91: break;
           case 37: 
-            { System.out.printf(" NEGACAO"); return new Symbol(Sym.NEGACAO, createToken(yytext()));
+            { System.out.println("NEGACAO"); return new Symbol(Sym.NEGACAO, createToken(yytext()));
             }
           case 92: break;
           case 38: 
-            { System.out.printf(" NUL"); return new Symbol(Sym.NULO, createToken(yytext()));
+            { System.out.println("NUL"); return new Symbol(Sym.NULO, createToken(yytext()));
             }
           case 93: break;
           case 39: 
-            { System.out.println(" FIM"); return new Symbol(Sym.FIM_DO_LACO, createToken(yytext()));
+            { System.out.println("FIM"); return new Symbol(Sym.FIM_DO_LACO, createToken(yytext()));
             }
           case 94: break;
           case 40: 
-            { System.out.printf(" LACO PARA"); return new Symbol(Sym.LACO_PARA, createToken(yytext()));
+            { System.out.println("LACO PARA"); return new Symbol(Sym.LACO_PARA, createToken(yytext()));
             }
           case 95: break;
           case 41: 
-            { System.out.printf(" COMENTARIO CURTO");
+            { System.out.println("COMENTARIO CURTO");
             }
           case 96: break;
           case 42: 
-            { System.out.printf(" senao"); return new Symbol(Sym.SENAO, createToken(yytext()));
+            { System.out.println("senao"); return new Symbol(Sym.SENAO, createToken(yytext()));
             }
           case 97: break;
           case 43: 
-            { System.out.printf(" VERDADEIRO"); return new Symbol(Sym.VALOR_VERDADEIRO, createToken(yytext()));
+            { System.out.println("VERDADEIRO"); return new Symbol(Sym.VALOR_VERDADEIRO, createToken(yytext()));
             }
           case 98: break;
           case 44: 
-            { System.out.printf(" ENTAO"); return new Symbol(Sym.ENTAO, createToken(yytext()));
+            { System.out.println("ENTAO"); return new Symbol(Sym.ENTAO, createToken(yytext()));
             }
           case 99: break;
           case 45: 
-            { System.out.printf(" QUEBRA DE LACO"); return new Symbol(Sym.QUEBRA_LACO, createToken(yytext()));
+            { System.out.println("QUEBRA DE LACO"); return new Symbol(Sym.QUEBRA_LACO, createToken(yytext()));
             }
           case 100: break;
           case 46: 
-            { System.out.printf(" DEFINICAO_LOCAL"); return new Symbol(Sym.DEFINICAO_LOCAL, createToken(yytext()));
+            { System.out.println("DEFINICAO_LOCAL"); return new Symbol(Sym.DEFINICAO_LOCAL, createToken(yytext()));
             }
           case 101: break;
           case 47: 
-            { System.out.printf(" FALSO"); return new Symbol(Sym.VALOR_FALSO, createToken(yytext()));
+            { System.out.println("FALSO"); return new Symbol(Sym.VALOR_FALSO, createToken(yytext()));
             }
           case 102: break;
           case 48: 
-            { System.out.printf(" ATE"); return new Symbol(Sym.ATE_LIMITE_LACO, createToken(yytext()));
+            { System.out.println("ATE"); return new Symbol(Sym.ATE_LIMITE_LACO, createToken(yytext()));
             }
           case 103: break;
           case 49: 
-            { System.out.printf(" ENQUANTO"); return new Symbol(Sym.LACO_ENQUANTO, createToken(yytext()));
+            { System.out.println("ENQUANTO"); return new Symbol(Sym.LACO_ENQUANTO, createToken(yytext()));
             }
           case 104: break;
           case 50: 
-            { System.out.printf(" RETORNE"); return new Symbol(Sym.RETORNO, createToken(yytext()));
+            { System.out.println("RETORNE"); return new Symbol(Sym.RETORNO, createToken(yytext()));
             }
           case 105: break;
           case 51: 
-            { System.out.printf(" REPETIR"); return new Symbol(Sym.REPETICAO, createToken(yytext()));
+            { System.out.println("REPETIR"); return new Symbol(Sym.REPETICAO, createToken(yytext()));
             }
           case 106: break;
           case 52: 
-            { System.out.printf(" senao SE"); return new Symbol(Sym.SENAO_SE, createToken(yytext()));
+            { System.out.println("senao SE"); return new Symbol(Sym.SENAO_SE, createToken(yytext()));
             }
           case 107: break;
           case 53: 
-            { System.out.printf(" COMENTARIO LONGO");
+            { System.out.println("COMENTARIO LONGO");
             }
           case 108: break;
           case 54: 
-            { System.out.printf(" FUNCAO"); return new Symbol(Sym.FUNCAO, createToken(yytext()));
+            { System.out.println("FUNCAO"); return new Symbol(Sym.FUNCAO, createToken(yytext()));
             }
           case 109: break;
           case 55: 
-            { System.out.printf(" FUNCAO LOCAL"); return new Symbol (Sym.FUNCAO_LOCAL, createToken(yytext()));
+            { System.out.println("FUNCAO LOCAL"); return new Symbol (Sym.FUNCAO_LOCAL, createToken(yytext()));
             }
           case 110: break;
           default:

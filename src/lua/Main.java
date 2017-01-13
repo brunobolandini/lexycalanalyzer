@@ -18,7 +18,12 @@ public class Main {
         	Lexer l = new Lexer(fr);
         	Parser p = new Parser(l);
             Object result = p.parse().value;
-            System.out.println("Compilacao concluida com sucesso!");
+            System.out.println("Compilação concluída com sucesso!");
+            
+            Semantic analiseSemantica = new Semantic(result);
+            if (analiseSemantica.doSemanticAnalysis())
+            	System.out.println("A Análise Semântica ocorreu corretamente!");
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

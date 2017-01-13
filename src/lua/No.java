@@ -2,6 +2,9 @@ package lua;
 
 import java.util.List;
 import java.util.ArrayList;
+import java_cup.runtime.*;
+import java_cup.*;
+import java.util.*;
 
 public class No {
     private Token token;
@@ -16,6 +19,10 @@ public class No {
         this.token = token;
         this.filhos = new ArrayList<>();
     }	
+    
+    public String getToken() {
+    	return this.token.toString();
+    }
 
     public void addFilho(Token token){
         filhos.add(new No(token));
@@ -23,6 +30,31 @@ public class No {
 
     public void addFilho(No no){
         filhos.add(no);
+    }
+    
+    public List<No> getFilhos() {
+    	if(this.filhos.size() > 0)
+    		return this.filhos;
+    	else
+    		return null;
+    }
+    
+    public No getFilho(int position) {
+    	if(this.filhos.size() > position) {
+    		if(this.filhos.get(position) != null)
+    			return this.filhos.get(position);
+    	}
+    	return null;
+    }	
+    
+    public No getNeto(int posFilho, int posNeto) {
+    	if(this.filhos.size() > posFilho) {
+    		if(this.filhos.get(posFilho).filhos.size() > posNeto) {
+    			if(this.filhos.get(posFilho).filhos.get(posNeto) != null)
+        			return this.filhos.get(posFilho).filhos.get(posNeto);
+    		}
+    	}
+    	return null;
     }
     
     @Override
