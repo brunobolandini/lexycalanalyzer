@@ -342,7 +342,9 @@ atribuicao_lista_de_expressoes   	::=   ATRIBUICAO:atribuicao lista_de_expressoe
 							     	
 lista_de_nomes				    	::= NOME:nome
 									{:
-										RESULT = new No(nome);
+										No no = new No (new Token("#"));
+										no.addFilho(nome);
+										RESULT = no;
 									:}
 									| lista_de_nomes:lista_de_nomes VIRGULA:virgula NOME:nome
 									{:
