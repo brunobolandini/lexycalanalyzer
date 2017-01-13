@@ -4,9 +4,9 @@
 cd src/lua
 
 # Removendo arquivos gerados em outra execução
-rm -f src/lua/Lexer.java
-rm -f src/lua/Parser.java
-rm -f src/lua/Sym.java
+rm -f Lexer.java
+rm -f Parser.java
+rm -f Sym.java
 
 # Para criação do Lexer.java:
 java -jar ../../jflex-1.6.1.jar Lexer.lex 
