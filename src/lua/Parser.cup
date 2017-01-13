@@ -24,7 +24,7 @@ parser code {:
     
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception {
         System.out.println("\nOcorreu um erro na linha " + (s.right)+ ", coluna "+s.left+". Identificador " +
-        s.value + " não reconhecido.");
+        s.value + " nao reconhecido.");
 	}
 :};
 
@@ -57,7 +57,7 @@ precedence right  EXPONENCIACAO;
 
 start with bloco;
 
-/*------------------------- CONSTRUÇÃO DA ÁRVORE -------------------------*/
+/*------------------------- CONSTRUCAO DA ARVORE -------------------------*/
 bloco 								::= lista_de_comandos:lista_de_comandos ultimo_comando:ultimo_comando
 									{:
 										No no = new No(new Token("#"));

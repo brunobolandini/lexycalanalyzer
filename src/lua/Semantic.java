@@ -43,10 +43,10 @@ public class Semantic {
 		
 		if(!token.isEmpty()) {
 			
-			//se for declaração, armazena a variável na tabela
+			//se for declaracao, armazena a variavel na tabela
 			if(token.equals("local") || token.equals("function")) {
 				
-				//salva a variável na tabela
+				//salva a variavel na tabela
 				TableSymbol declaredVariable;
 				switch(token) {
 					case "local":
@@ -56,7 +56,7 @@ public class Semantic {
 					case "function":
 						declaredVariable = new TableSymbol(this.no.getFilho(0).getToken(), "function");
 						this.declaradas.add(declaredVariable);
-						//se tiver algum argumento, tem que ser adicionado também
+						//se tiver algum argumento, tem que ser adicionado tambem
 						if (this.no.getNeto(1,1) != null && !this.no.getNeto(1,1).getToken().equals(")")) {
 							declaredVariable = new TableSymbol(this.no.getNeto(1,1).getToken(), "argument");
 							this.declaradas.add(declaredVariable);
@@ -69,7 +69,7 @@ public class Semantic {
 				}
 				
 				if (this.no.getFilhos() != null) {
-					//Continua a recursão para os filhos, com excessão do filho com o nome declarado
+					//Continua a recursao para os filhos, com excessao do filho com o nome declarado
 					for (No filho : this.no.getFilhos()) {
 						if (!filho.getToken().equals(declaredVariable.getId()) && filho != null) {
 							//Desce recursivamente, passando a tabela atualizada
@@ -81,8 +81,8 @@ public class Semantic {
 				}
 			}
 			
-			//se não, verifica se é palavra reservada
-			//caso sim, desce na recursão
+			//se nao, verifica se e palavra reservada
+			//caso sim, desce na recursao
 			else if (this.reservada(token)) {
 				if (this.no.getFilhos() != null) {
 					for (No filho : this.no.getFilhos()) {
@@ -96,22 +96,22 @@ public class Semantic {
 				}
 			}
 			
-			//se não, é um nome ou valor
+			//se nao, e um nome ou valor
 			else {
 				
 				//VERIFICADO:
-				//1 - SE A VARIÁVEL FOI DECLARADA
-				//2 - SE COMEÇA COM UM NÚMERO, É UM NUMERO E NÃO UM NOME
-				//3 - VERIFICAR SE É UMA STRING (SE COMEÇA COM ")
-				//4 - SE É ARGUMENTO DE UMA FUNCAO, AI NAO PRECISA ESTAR DECLARADO
+				//1 - SE A VARIAVEL FOI DECLARADA
+				//2 - SE COMECA COM UM NUMERO, E UM NUMERO E NAO UM NOME
+				//3 - VERIFICAR SE E UMA STRING (SE COMECA COM ")
+				//4 - SE E ARGUMENTO DE UMA FUNCAO, AI NAO PRECISA ESTAR DECLARADO
 				
 				//FALTA VERIFICAR:
 				//
-				//2 - CASO DO PRINT NÃO DECLARADO
+				//2 - CASO DO PRINT NAO DECLARADO
 				//OUTROS A VERIFICAR
 				
 				
-				//se constar na tabela de declarações, desce recursivamente
+				//se constar na tabela de declaracoes, desce recursivamente
 				if(this.declarada(token) || Character.isDigit(token.charAt(0)) || token.charAt(0) == '"') {
 					if (this.no.getFilhos() != null) {
 						for (No filho : this.no.getFilhos()) {
@@ -126,7 +126,7 @@ public class Semantic {
 					}
 				}
 				else {
-					System.out.println("Erro Semântico: '" + token + "' não foi declarado no escopo!");
+					System.out.println("Erro Semantico: '" + token + "' nao foi declarado no escopo!");
 					return false;
 				}
 			}
