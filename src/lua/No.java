@@ -57,6 +57,18 @@ public class No {
     	return null;
     }
     
+    public No getBisneto(int posFilho, int posNeto, int posBisneto) {
+    	if(this.filhos.size() > posFilho) {
+    		if(this.filhos.get(posFilho).filhos.size() > posNeto) {
+    			if(this.filhos.get(posFilho).filhos.get(posNeto).filhos.size() > posBisneto) {
+    				if(this.filhos.get(posFilho).filhos.get(posNeto).filhos.get(posBisneto) != null)
+    					return this.filhos.get(posFilho).filhos.get(posNeto).filhos.get(posBisneto);
+    			}
+    		}
+    	}
+    	return null;
+    }
+    
     @Override
     public String toString() {
         if (this.token != null)

@@ -3,19 +3,19 @@
 # Navegar para pasta lua:
 cd src/lua
 
-# Removendo arquivos gerados em outra execução
+# Removendo arquivos gerados em outra execucao
 rm -f Lexer.java
 rm -f Parser.java
 rm -f Sym.java
 
-# Para criação do Lexer.java:
+# Para criacao do Lexer.java:
 java -jar ../../jflex-1.6.1.jar Lexer.lex 
 
-# Para criação do Parser.java e Sym.java:
+# Para criacao do Parser.java e Sym.java:
 java -jar ../../java-cup-11a.jar -parser Parser -expect 11 -symbols Sym Parser.cup
 
 
-# EXECUÇÃO POR LINHA DE COMANDO:
+# EXECUCAO POR LINHA DE COMANDO:
 
 # (MAC)
 cd ..
