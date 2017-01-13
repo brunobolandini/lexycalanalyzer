@@ -163,7 +163,6 @@ comando        						::=  lista_de_variaveis:lista_de_variaveis ATRIBUICAO:atrib
 			                		{:
 										No no = new No(new Token("#"));
 										
-										
 										No se = new No(se_condicional);
 										se.addFilho(expressao);
 										se.addFilho(entao);
