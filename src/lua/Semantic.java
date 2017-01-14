@@ -42,12 +42,15 @@ public class Semantic {
 		String token = this.no.getToken();
 		
 		if(!token.isEmpty()) {
+			//se for local, armazena a variavel ou variaveis na tabela depois desce na recursao
+			if(token.equals("local")) {
+				if (!this.logicLocal())
+					return false;
+			}
 			
-			//se for local, armazena a variavel ou variaveis na tabela
-			//se for function, armazena o nome da funcao e os argumentos na tabela
-			//depois desce na recursao
-			if(token.equals("local") || token.equals("function")) {
-				if (!this.logicLocalFunction())
+			//se for function, armazena o nome da funcao e os argumentos na tabela depois desce na recursao
+			else if (token.equals("function")) {
+				if (!this.logicFunction())
 					return false;
 			}
 			
@@ -62,63 +65,81 @@ public class Semantic {
 				if (!this.logicNameOrNumber())
 					return false;
 			}
-			
 		}
 		
 		return true;
 	}
 	
-	public Boolean logicLocalFunction() {
+	public Boolean logicLocal() {
 		String token = this.no.getToken();
 		TableSymbol declaredVariable;
 		
-		switch(token) {
-			case "local":
-				if(!this.declarada(token)) {
-					declaredVariable = new TableSymbol(this.no.getFilho(0).getToken(), "variable");
-					this.declaradas.add(declaredVariable);
-				}
-				else {
-					System.out.println(token + " já foi declarado!");
-					return false;
-				}
-				//se for declaracao de mais de uma variavel na mesma linha
-				if (this.no.getFilhos() != null) {
-					for (int i = 1; i < this.no.getFilhos().size(); i++) {
-						if (this.no.getFilho(i).getToken().equals(",") || this.no.getFilho(i+1) != null) {
-							declaredVariable = new TableSymbol(this.no.getFilho(i+1).getToken(), "variable");
-							this.declaradas.add(declaredVariable);
-						}
-					}
-				}
-				break;
-			
-			case "function":
-				//adiciona a tabela o nome da funcao
-				declaredVariable = new TableSymbol(this.no.getFilho(0).getToken(), "function");
-				this.declaradas.add(declaredVariable);
-				
-				//se tiver argumentos, tem que ser adicionados tambems
-				if (this.no.getFilhos() != null && this.no.getFilho(1) != null && 
-					this.no.getFilho(1).getFilhos()!= null && this.no.getNeto(1, 1) != null && 
-					this.no.getNeto(1, 1).getFilhos() != null) {
-					for (int i = 0; i < this.no.getNeto(1, 1).getFilhos().size(); i++) {
-						declaredVariable = new TableSymbol(this.no.getBisneto(1,1,i).getToken(), "argument");
+		if(!this.declared(this.no.getNeto(0,0).getToken(), "variable")) {
+			declaredVariable = new TableSymbol(this.no.getNeto(0,0).getToken(), "variable");
+			this.declaradas.add(declaredVariable);
+		}
+		else {
+			System.out.println(this.no.getNeto(0,0).getToken() + " já foi declarado!");
+			return false;
+		}
+		//se for declaracao de mais de uma variavel na mesma linha
+		if (this.no.getFilhos() != null) {
+			for (int i = 1; i < this.no.getFilho(0).getFilhos().size(); i++) {
+				if (this.no.getNeto(0,i).getToken().equals(",")) {
+					if (this.no.getNeto(0,i+1) != null && !this.declared(this.no.getNeto(0,i+1).getToken(), "variable")) {
+						declaredVariable = new TableSymbol(this.no.getNeto(0,i+1).getToken(), "variable");
 						this.declaradas.add(declaredVariable);
 					}
-				}							
-				break;
-			
-			default:
-				declaredVariable = new TableSymbol(this.no.getFilho(0).getToken());
-				this.declaradas.add(declaredVariable);
-				break;
+					else {
+						System.out.println(this.no.getNeto(0,i+1).getToken() + " já foi declarado!");
+						return false;
+					}
+				}
+			}
 		}
 		
 		if (this.no.getFilhos() != null) {
 			//Continua a recursao para os filhos, com excessao do filho com o nome declarado
 			for (No filho : this.no.getFilhos()) {
-				if (!this.declarada(filho.getToken()) && filho != null) {
+				if (!this.declared(filho.getToken()) && filho != null) {
+					Semantic novaAnalise = new Semantic(filho, this.declaradas);
+					//Desce recursivamente, passando a tabela atualizada
+					if (!novaAnalise.doSemanticAnalysis())
+						return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public Boolean logicFunction() {
+		//adiciona a tabela o nome da funcao
+		TableSymbol declaredVariable = new TableSymbol(this.no.getFilho(0).getToken(), "function");
+		this.declaradas.add(declaredVariable);
+		
+		//se tiver argumentos, tem que ser adicionados tambems
+		if (this.no.getFilhos() != null && this.no.getFilho(1) != null && 
+			this.no.getFilho(1).getFilhos()!= null && this.no.getNeto(1, 1) != null && 
+			this.no.getNeto(1, 1).getFilhos() != null) {
+			for (int i = 0; i < this.no.getNeto(1, 1).getFilhos().size(); i++) {
+				if (!this.no.getBisneto(1,1,i).getToken().equals(",")) {
+					declaredVariable = new TableSymbol(this.no.getBisneto(1,1,i).getToken(), "argument");
+					this.declaradas.add(declaredVariable);
+				}
+			}
+		}
+		
+		if (this.no.getFilhos() != null) {
+			//Continua a recursao para os filhos, com excessao do filho com o nome declarado
+			for (No filho : this.no.getFilhos()) {
+				if (!this.declared(filho.getToken()) && filho != null) {
+					Semantic novaAnalise = new Semantic(filho, this.declaradas);
+					//Desce recursivamente, passando a tabela atualizada
+					if (!novaAnalise.doSemanticAnalysis())
+						return false;
+				}
+				else if (filho != null && filho.getFilhos() != null) {
 					Semantic novaAnalise = new Semantic(filho, this.declaradas);
 					//Desce recursivamente, passando a tabela atualizada
 					if (!novaAnalise.doSemanticAnalysis())
@@ -196,7 +217,7 @@ public class Semantic {
 		TableSymbol declaredVariable;
 
 		//se constar na tabela de declaracoes, desce recursivamente
-		if(this.declarada(token)) {
+		if(this.declared(token)) {
 			if (this.no.getFilhos() != null) {
 				for (No filho : this.no.getFilhos()) {
 					if (filho != null) {
@@ -233,9 +254,17 @@ public class Semantic {
 		return true;
 	}
 	
-	public Boolean declarada(String token) {
+	public Boolean declared(String token) {
 		for (TableSymbol tb : this.declaradas) {
 			if (tb.getId().equals(token))
+				return true;
+		}
+		return false;
+	}
+	
+	public Boolean declared(String token, String type) {
+		for (TableSymbol tb : this.declaradas) {
+			if (tb.getId().equals(token) && tb.getType().equals(type))
 				return true;
 		}
 		return false;

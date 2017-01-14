@@ -11,7 +11,7 @@ public class Main {
         
     	String rootPath = Paths.get("", args).toAbsolutePath(). toString();
         String subPath = "/src/lua";
-        String sourceCode = rootPath + subPath + "/program.lua";
+        String sourceCode = rootPath + subPath + "/program4.lua";
  
         try {
         	FileReader fr = new FileReader(sourceCode);
@@ -38,6 +38,8 @@ public class Main {
             Semantic analiseSemantica = new Semantic(result);
             if (analiseSemantica.doSemanticAnalysis())
             	System.out.println("A Analise Semantica ocorreu corretamente!");
+            else
+            	System.out.println("Ocorreram um ou mais erros na Analise Semantica.");
             
         } catch (Exception e) {
             e.printStackTrace();
