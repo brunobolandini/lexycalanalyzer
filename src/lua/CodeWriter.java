@@ -10,7 +10,7 @@ public class CodeWriter {
 	public FileWriter fw;
 	
 	public CodeWriter() throws IOException {
-		this.f = new File("src/lua/GeneratedCode.java");
+		this.f = new File("lua/GeneratedCode.java");
 		this.fw = new FileWriter(f);		
 		fw.append("package lua;\n");
 		fw.append("public class GeneratedCode {\n");		
@@ -22,7 +22,7 @@ public class CodeWriter {
 	public void fecha() throws IOException{
 		FileWriter fw = null;
 		
-        fw = new FileWriter("src/lua/GeneratedCode.java", true);
+        fw = new FileWriter("lua/GeneratedCode.java", true);
         fw.append("}");
 		
 		if (fw != null){

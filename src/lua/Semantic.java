@@ -232,7 +232,7 @@ public class Semantic {
 				}
 			}
 		}
-		//se nao, verifica se comeca com digito ou é uma string, e desce recursivamente
+		//se nao, verifica se comeca com digito ou e uma string, e desce recursivamente
 		else if(Character.isDigit(token.charAt(0)) || token.charAt(0) == '"') {
 			if (this.no.getFilhos() != null) {
 				for (No filho : this.no.getFilhos()) {

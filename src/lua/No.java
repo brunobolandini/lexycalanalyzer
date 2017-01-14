@@ -156,7 +156,7 @@ public class No {
             
     		FileWriter fw = null;
     		
-            fw = new FileWriter("src/lua/GeneratedCode.java", true);
+            fw = new FileWriter("lua/GeneratedCode.java", true);
             String token_java = this.escreve(token);
             fw.append(token_java);
 			
