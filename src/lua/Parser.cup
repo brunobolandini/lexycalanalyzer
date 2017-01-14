@@ -24,11 +24,7 @@ parser code {:
     
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception {
         System.out.println("\nOcorreu um erro na linha " + (s.right)+ ", coluna "+s.left+". Identificador " +
-<<<<<<< Updated upstream
         s.value + " nao reconhecido.");
-=======
-        s.value + " n�o reconhecido.");
->>>>>>> Stashed changes
 	}
 :};
 
@@ -61,11 +57,8 @@ precedence right  EXPONENCIACAO;
 
 start with bloco;
 
-<<<<<<< Updated upstream
 /*------------------------- CONSTRUCAO DA ARVORE -------------------------*/
-=======
-/*------------------------- CONSTRU��O DA �RVORE -------------------------*/
->>>>>>> Stashed changes
+
 bloco 								::= lista_de_comandos:lista_de_comandos ultimo_comando:ultimo_comando
 									{:
 										No no = new No(new Token("#"));
@@ -235,7 +228,8 @@ ultimo_comando						::=	RETORNO:retorno n_lista_de_expressoes:n_lista_de_express
 									| QUEBRA_LACO:quebra_laco
 									{:
 										RESULT = new No(quebra_laco);
-		ff; 						
+									:}
+									; 						
  						
 funcao								::= FUNCAO:funcao corpo_da_funcao:corpo_da_funcao
 									{:

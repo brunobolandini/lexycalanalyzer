@@ -4,6 +4,15 @@ import java.util.List;
 import java.util.ArrayList;
 import java_cup.runtime.*;
 import java_cup.*;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class No {
@@ -57,18 +66,69 @@ public class No {
     	return null;
     }
     
+    public String escreve(Token token) throws IOException{	  	
+		switch(token.valor)
+		{
+		case "[":
+			return "[";
+		case "]":
+			return "]";
+		case "(":
+			return "(";
+		case ")":
+			return ")";
+		case "and":
+			return "and";
+		case "break":
+			return "break\n";
+		case "end":
+			return "}";
+		case "do":
+			return "do {\n";
+		case "elseif":
+			return "} else if {\n";
+		case "else":
+			return "} else {\n";
+		case "false":
+			return "false";
+		case "for":
+			return "for ";
+		case "function":
+			return "public void function() {\n";
+		case "local":
+			return "private ";
+		case "local function":
+			return "private void function () { \n";
+		case "if":
+			return "if ";
+		case "nil":
+			return "null";
+		case "then":
+			return "{ \n";
+		case "#":
+			return "";
+		
+		}
+		return token.valor+" ";
+	}
+    
     @Override
     public String toString() {
         if (this.token != null)
-        	imprime();
+			try {
+				imprime();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         return "";
     }
     
-    public void imprime() {
+    public void imprime() throws IOException {
     	this.imprime("", false);
     }
     
-    private void imprime(String prefixo, boolean folha) {
+    private void imprime(String prefixo, boolean folha) throws IOException {
         if(this.token != null && this.token.valor != null) {
         	String tabulacao = "", espaco = "";
             
@@ -81,6 +141,17 @@ public class No {
             }    
             
             System.out.println(prefixo + tabulacao + this.token.valor);
+            
+    		FileWriter fw = null;
+    		
+            fw = new FileWriter("src/lua/GeneratedCode.java", true);
+            String token_java = this.escreve(token);
+            fw.append(token_java);
+			
+			if (fw != null){
+				fw.close();
+        	};
+            
             
             for (int i = 0; i < filhos.size() - 1; i++) {
                 if(filhos.get(i) != null)
