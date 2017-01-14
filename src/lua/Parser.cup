@@ -58,6 +58,7 @@ precedence right  EXPONENCIACAO;
 start with bloco;
 
 /*------------------------- CONSTRUCAO DA ARVORE -------------------------*/
+
 bloco 								::= lista_de_comandos:lista_de_comandos ultimo_comando:ultimo_comando
 									{:
 										No no = new No(new Token("#"));
@@ -455,10 +456,10 @@ argumentos							::= ABRE_PARENTESIS:abre_parentesis n_lista_de_expressoes:n_lis
 										No no = new No(new Token("#"));
 										no.addFilho(abre_parentesis);
 										no.addFilho(n_lista_de_expressoes);
-										no.addFilho(fecha_parentesis);
-										RESULT = no;
-									:}
-									| construtor_de_tabelas:construtor_de_tabelas
+											no.addFilho(fecha_parentesis);
+											RESULT = no;
+										:}
+										| construtor_de_tabelas:construtor_de_tabelas
 									{:
 										RESULT = construtor_de_tabelas;
 									:}

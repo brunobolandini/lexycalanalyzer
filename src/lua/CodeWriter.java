@@ -4,22 +4,30 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class CodeWriter {	
+public class CodeWriter {
 	
-	CodeWriter(Object tree) throws IOException{
-		if (tree == null ){
-			return;
-		}
-		
-		/* TRATAR A ARVORE AQUI */
-		
-		File f = new File("lua/GeneratedCode.java");
-		FileWriter fw = new FileWriter(f);		
+	public File f;
+	public FileWriter fw;
+	
+	public CodeWriter() throws IOException {
+		this.f = new File("src/lua/GeneratedCode.java");
+		this.fw = new FileWriter(f);		
 		fw.append("package lua;\n");
 		fw.append("public class GeneratedCode {\n");		
-		fw.append("	public static void main(String args[]){\n");
-		fw.append("		System.out.println(\"teste\");\n	}\n}");
+		fw.append("	public static void main(String args[]){\n\n");
 		fw.close();
+		
+	}
+	
+	public void fecha() throws IOException{
+		FileWriter fw = null;
+		
+        fw = new FileWriter("src/lua/GeneratedCode.java", true);
+        fw.append("}");
+		
+		if (fw != null){
+			fw.close();
+    	};
 	}
 
 }
