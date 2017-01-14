@@ -79,20 +79,22 @@ public class Semantic {
 			this.declaradas.add(declaredVariable);
 		}
 		else {
-			System.out.println(this.no.getNeto(0,0).getToken() + " já foi declarado!");
+			System.out.println("Erro Semantico: '" + this.no.getNeto(0,0).getToken() + "' ja foi declarado no escopo!");
 			return false;
 		}
 		//se for declaracao de mais de uma variavel na mesma linha
 		if (this.no.getFilhos() != null) {
 			for (int i = 1; i < this.no.getFilho(0).getFilhos().size(); i++) {
 				if (this.no.getNeto(0,i).getToken().equals(",")) {
-					if (this.no.getNeto(0,i+1) != null && !this.declared(this.no.getNeto(0,i+1).getToken(), "variable")) {
-						declaredVariable = new TableSymbol(this.no.getNeto(0,i+1).getToken(), "variable");
-						this.declaradas.add(declaredVariable);
-					}
-					else {
-						System.out.println(this.no.getNeto(0,i+1).getToken() + " já foi declarado!");
-						return false;
+					if (this.no.getNeto(0,i+1) != null) {
+						if(!this.declared(this.no.getNeto(0,i+1).getToken(), "variable")) {
+							declaredVariable = new TableSymbol(this.no.getNeto(0,i+1).getToken(), "variable");
+							this.declaradas.add(declaredVariable);
+						}
+						else {
+							System.out.println("Erro Semantico: '" + this.no.getNeto(0,i+1).getToken() + "' ja foi declarado no escopo!");
+							return false;
+						}
 					}
 				}
 			}

@@ -11,7 +11,7 @@ public class Main {
         
     	String rootPath = Paths.get("", args).toAbsolutePath(). toString();
         String subPath = "/src/lua";
-        String sourceCode = rootPath + subPath + "/program4.lua";
+        String sourceCode = rootPath + subPath + "/teste_ja_declarado.lua";
  
         try {
         	FileReader fr = new FileReader(sourceCode);
