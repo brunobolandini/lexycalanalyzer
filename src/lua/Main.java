@@ -17,7 +17,9 @@ public class Main {
         	FileReader fr = new FileReader(sourceCode);
         	Lexer l = new Lexer(fr);
         	Parser p = new Parser(l);
+			CodeWriter code = new CodeWriter();
             Object result = p.parse().value;
+            code.fecha();
             System.out.println("Compilacao concluida com sucesso!");
             
             Semantic analiseSemantica = new Semantic(result);
